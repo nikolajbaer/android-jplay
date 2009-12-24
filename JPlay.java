@@ -17,7 +17,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_backBuffer = new BufferedImage( m_gameWidth,m_gameHeight, BufferedImage.TYPE_INT_RGB ) ;
         m_backGraphics = (Graphics2D)m_backBuffer.getGraphics();
         m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        m_game=new Game(m_gameWidth,m_gameHeight,10.0f);
+        m_game=new Game(m_gameWidth,m_gameHeight);
         m_timer = new Timer(1000/60,this);
         m_timer.setInitialDelay(500);
         m_timer.start(); 
