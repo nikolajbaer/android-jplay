@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
 
-public class Game {
+public class Game implements GameObjectEventListener {
 	private World m_world;
     private float m_width;
     private float m_height;
@@ -19,6 +19,9 @@ public class Game {
     private PlayerObject m_player;
 
     public static final float PPM = 10.0f;
+
+    // CONSIDER currently the simplest way to manage physics world interrelationships (see PlayerObect GO create)
+    public static Game game=null; // singleton
 
     public Game(int width,int height){
         // set world width/height
@@ -46,6 +49,7 @@ public class Game {
 
             b.setXForm(new Vec2(i*4+2,10.0f),i);
             PlayerObject po=new PlayerObject(b,verts,(i==0)?Color.red:Color.blue);
+            po.addGameObjectEventListener(this);
             m_gameObjects.add(po);
             if(i==0){ m_player=po; }
         }
@@ -60,21 +64,26 @@ public class Game {
             m_gameObjects.add(new GameObject(b,verts2));
         }
         */
+        game=this;
     }
 
-    private Body createRect(float density,float x0,float y0, float width, float height){
+    public Body createCircle(float density, float radius){
+        return null; //temporary
+    }
+
+    public Body createRect(float density,float x0,float y0, float width, float height){
         float[] verts={x0,y0,x0+width,y0, x0+width,y0+height, x0,y0+height};
         return createPolygon(density,verts);
     }
 
-    private Body createStaticRect(float x0,float y0, float width, float height){
+    public Body createStaticRect(float x0,float y0, float width, float height){
         float[] verts={0,0, width,0, width,height, 0,height};
         Body b = createPolygon(0.0f,verts);
         b.setXForm(new Vec2(x0,y0),0.0f);
         return b;
     }
 
-    private Body createPolygon(float density,float[] vertices){
+    public Body createPolygon(float density,float[] vertices){
         if(vertices.length % 2 != 0){
             throw new IllegalArgumentException("Vertices must be given as pairs of x,y coordinates, " +
 											   "but number of passed parameters was odd.");
@@ -127,4 +136,13 @@ public class Game {
             g.setTransform(new AffineTransform(t));
         }
     }
+
+    public void gameObjectCreated(GameObjectEvent e){
+        System.out.println(e.getTarget() + " created "+e.getCreated());
+    }
+
+    public void gameObjectDestroyed(GameObjectEvent e){ 
+        System.out.println(e.getTarget() + " is to be destroyed");
+    }
+
 }

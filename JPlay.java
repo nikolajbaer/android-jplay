@@ -27,6 +27,9 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             public void keyPressed(KeyEvent e){
                 // TODO parse input commands 
                 switch(e.getKeyCode()){
+                    case KeyEvent.VK_SPACE:
+                        m_game.getPlayer().triggerOn();
+                        break;
                     case KeyEvent.VK_UP:
                         m_game.getPlayer().forward();
                         break;
@@ -41,8 +44,12 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
                         break;
                 }
             }
+
             public void keyReleased(KeyEvent e){
                 switch(e.getKeyCode()){
+                    case KeyEvent.VK_SPACE:
+                        m_game.getPlayer().triggerOff();
+                        break;
                     case KeyEvent.VK_UP:
                     case KeyEvent.VK_DOWN:
                         m_game.getPlayer().halt();

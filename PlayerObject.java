@@ -77,8 +77,13 @@ public class PlayerObject extends GameObject {
         thrust(thruster);
     }
 
-    public void trigger(){
+    public void triggerOn(){
         // TODO how does a gameobject spawn a new gameobject?
+        // Easy! Events!
+        dispatchGameObjectDestroyedEvent(new GameObjectEvent(this)); 
     }
+
+    public void triggerOff(){
+    } 
 }
 
