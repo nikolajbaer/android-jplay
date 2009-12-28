@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.*;
+import java.awt.event.KeyEvent;
 
 public class JPlay extends JFrame implements ActionListener { //implements Runnable{
     private Game m_game;
@@ -21,6 +22,40 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_timer = new Timer(1000/60,this);
         m_timer.setInitialDelay(500);
         m_timer.start(); 
+        
+        addKeyListener(new KeyListener(){
+            public void keyPressed(KeyEvent e){
+                // TODO parse input commands 
+                switch(e.getKeyCode()){
+                    case KeyEvent.VK_UP:
+                        m_game.getPlayer().forward();
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        m_game.getPlayer().reverse();
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        m_game.getPlayer().left();
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        m_game.getPlayer().right();
+                        break;
+                }
+            }
+            public void keyReleased(KeyEvent e){
+                switch(e.getKeyCode()){
+                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_DOWN:
+                        m_game.getPlayer().halt();
+                        break;
+                    case KeyEvent.VK_LEFT:
+                    case KeyEvent.VK_RIGHT:
+                        m_game.getPlayer().stopRotate();
+                        break;
+                }
+
+            }
+            public void keyTyped(KeyEvent e){}
+        });
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -39,7 +74,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_backGraphics.fillRect( 0,0, m_gameWidth,m_gameHeight) ;
         m_game.draw(m_backGraphics);
         Graphics g = getGraphics();
-        g.drawImage( m_backBuffer, 5,5, null );
+        g.drawImage( m_backBuffer, 5,25, null );
         g.dispose();
     }    
 }

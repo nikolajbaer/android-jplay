@@ -16,6 +16,7 @@ public class Game {
     private float m_height;
     private Body[] m_boundingBox;
     private ArrayList<GameObject> m_gameObjects;
+    private PlayerObject m_player;
 
     public static final float PPM = 10.0f;
 
@@ -28,13 +29,13 @@ public class Game {
 		Vec2 minWorldAABB = new Vec2(-m_width,-m_height);
 		Vec2 maxWorldAABB = new Vec2(m_width*2,m_height*2);
         System.out.println("World Bounds: "+minWorldAABB+" -- "+maxWorldAABB);
-		m_world = new World(new AABB(minWorldAABB,maxWorldAABB),new Vec2(0,9),true);
+		m_world = new World(new AABB(minWorldAABB,maxWorldAABB),new Vec2(0,0),true);
  
         // create screen bounding box
         m_boundingBox=new Body[4]; 
         m_boundingBox[0]=createStaticRect( -10.0f,0.0f, 10.0f,m_height); //left
         m_boundingBox[1]=createStaticRect( 0.0f,-10.0f, m_width, 10.0f); //top
-        m_boundingBox[2]=createStaticRect( m_height,0.0f,10.0f,m_height); //right
+        m_boundingBox[2]=createStaticRect( m_width,0.0f,10.0f,m_height); //right
         m_boundingBox[3]=createStaticRect( 0.0f,m_height, m_width, 10.0f); //bottom
 
         m_gameObjects=new ArrayList<GameObject>();
@@ -44,8 +45,12 @@ public class Game {
             Body b=createPolygon(1.0f, verts );
 
             b.setXForm(new Vec2(i*4+2,10.0f),i);
-            m_gameObjects.add(new GameObject(b,verts));
+            PlayerObject po=new PlayerObject(b,verts,(i==0)?Color.red:Color.blue);
+            m_gameObjects.add(po);
+            if(i==0){ m_player=po; }
         }
+    
+        /*
         float[] verts2={1.0f,1.0f,0.0f,2.0f,-1.0f,-2.0f,3.0f,-2.0f,3.0f,0.0f};
         for(int i=0;i<3;i++){
             //Body b=createRect(0.5f,-1.0f,-1.0f,2.0f,2.0f);
@@ -54,7 +59,7 @@ public class Game {
             b.setXForm(new Vec2(i*4+2,20.0f),i);
             m_gameObjects.add(new GameObject(b,verts2));
         }
-
+        */
     }
 
     private Body createRect(float density,float x0,float y0, float width, float height){
@@ -88,6 +93,7 @@ public class Game {
         // create the body def and body
         BodyDef bd = new BodyDef();
         bd.isBullet=false;
+        bd.linearDamping=0.98f;
         Body b=m_world.createBody(bd);
         b.createShape(pd);
         b.setMassFromShapes();
@@ -98,11 +104,19 @@ public class Game {
         return new Vec2(v.x*PPM,v.y*PPM);
     }
 
+    // TODO refactor this?
+    public PlayerObject getPlayer(){
+        return m_player;
+    }
+
     public static Vec2 toWorld(Vec2 v){
         return new Vec2(v.x*(1.0f/PPM),v.y*(1.0f/PPM));
     }
 
     public void tick(){
+        for(int i=0;i<m_gameObjects.size();i++){
+            m_gameObjects.get(i).tick();
+        }
         m_world.step(1.0f/60.0f,1);
     }
 
