@@ -6,28 +6,18 @@ import java.lang.Math;
 import java.util.ArrayList;
 
 
-public class GameObject {
+public abstract class GameObject {
     protected Body m_body;
-    protected float[] m_vertices;
-    protected int[] x_pts; protected int[] y_pts;
     protected float thruster;
     protected static float MAX_LIN_VEL=10.0f;
     protected static float MAX_ANG_VEL=1.0f;
 
     protected ArrayList<GameObjectEventListener> m_gameObjectEventListeners;
+    protected int m_damage=0;
 
-    public GameObject(Body b,float[] vertices){
+    public GameObject(Body b){
         m_body=b;
-        m_vertices=vertices;
         thruster=0.0f;
-
-        // hang on to int points for drawing..
-        x_pts=new int[m_vertices.length/2];
-        y_pts=new int[m_vertices.length/2];
-        for(int i=0;i<vertices.length;i+=2){
-            x_pts[i/2]=(int)(vertices[i]*Game.PPM);
-            y_pts[i/2]=(int)(vertices[i+1]*Game.PPM);
-        }
 
         m_gameObjectEventListeners = new ArrayList<GameObjectEventListener>();
     }
@@ -41,21 +31,12 @@ public class GameObject {
         return rotate(new Vec2(0,-1),m_body.getAngle());
     }
 
-    public void tick(){
-    }
+    public abstract void tick();
 
     // TODO this should be abstracted into a GameObjectDisplay class
     // so i can make game code separate from display code to port to Android
-    public void draw( Graphics2D g ){
-        g.setColor(Color.black);
-        Vec2 p=Game.toScreen(m_body.getPosition());
-        g.translate(p.x,p.y);
-        g.rotate(m_body.getAngle());
-
-        //int mp=(int)(pixelsPerMeter);
-        //g.fillRect(-mp,-mp,mp*2,mp*2);
-        g.fillPolygon(x_pts,y_pts,x_pts.length);
-    }
+    public abstract void draw( Graphics2D g );
+    // do nothing
 
     // TODO shouldn't this kind of framework already be pre-packaged?
     public void addGameObjectEventListener(GameObjectEventListener l){
@@ -77,6 +58,14 @@ public class GameObject {
             m_gameObjectEventListeners.get(i).gameObjectDestroyed(e);
         }
     }  
+
+    public Body getBody(){
+        return m_body;
+    }
+
+    public boolean doesDamage(){
+        return m_damage > 0;
+    }
 }
 
 

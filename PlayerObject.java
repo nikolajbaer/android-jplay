@@ -4,7 +4,7 @@ import org.jbox2d.common.Vec2;
 import java.awt.geom.*;
 import java.lang.Math;
 
-public class PlayerObject extends GameObject {
+public class PlayerObject extends PolygonGameObject {
     private Color color;
     private int health;
     
@@ -12,6 +12,7 @@ public class PlayerObject extends GameObject {
         super(b,vertices);
         color=c; 
         health=100;
+
     }
 
     public void left(){
@@ -80,7 +81,12 @@ public class PlayerObject extends GameObject {
     public void triggerOn(){
         // TODO how does a gameobject spawn a new gameobject?
         // Easy! Events!
-        dispatchGameObjectDestroyedEvent(new GameObjectEvent(this)); 
+        Body b=Game.game.createCircle(5.0f,0.5f);
+        BulletObject bo=new BulletObject(b,5);
+        b.setXForm(m_body.getPosition(),m_body.getAngle());
+        b.setBullet(true);
+        //b.setLinearVelocity(getDir().mul(10));
+        dispatchGameObjectCreatedEvent(new GameObjectEvent(this,bo)); 
     }
 
     public void triggerOff(){

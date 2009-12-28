@@ -4,13 +4,14 @@ import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.CircleDef;
 import org.jbox2d.collision.PolygonDef;
 import org.jbox2d.collision.ShapeDef;
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.*;
+import org.jbox2d.dynamics.contacts.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
 
-public class Game implements GameObjectEventListener {
+// CONSIDER phsyics should be refactored into its own engine
+public class Game implements GameObjectEventListener,ContactListener {
 	private World m_world;
     private float m_width;
     private float m_height;
@@ -33,7 +34,9 @@ public class Game implements GameObjectEventListener {
 		Vec2 maxWorldAABB = new Vec2(m_width*2,m_height*2);
         System.out.println("World Bounds: "+minWorldAABB+" -- "+maxWorldAABB);
 		m_world = new World(new AABB(minWorldAABB,maxWorldAABB),new Vec2(0,0),true);
- 
+
+        // TODO pull out contact listener to its own class
+        m_world.setContactListener(this);
         // create screen bounding box
         m_boundingBox=new Body[4]; 
         m_boundingBox[0]=createStaticRect( -10.0f,0.0f, 10.0f,m_height); //left
@@ -68,7 +71,19 @@ public class Game implements GameObjectEventListener {
     }
 
     public Body createCircle(float density, float radius){
-        return null; //temporary
+        // create circle def
+        CircleDef cd = new CircleDef();
+        cd.radius = radius;
+        cd.density=density;
+        cd.friction=0.4f;
+        cd.restitution=0.1f;
+        cd.isSensor=false;
+
+        BodyDef bd = new BodyDef();
+        Body b = m_world.createBody(bd);
+        b.createShape(cd);
+        b.setMassFromShapes();
+        return b;
     }
 
     public Body createRect(float density,float x0,float y0, float width, float height){
@@ -138,11 +153,30 @@ public class Game implements GameObjectEventListener {
     }
 
     public void gameObjectCreated(GameObjectEvent e){
-        System.out.println(e.getTarget() + " created "+e.getCreated());
+        GameObject c=e.getCreated();
+        System.out.println(e.getTarget() + " created "+c);
+        m_gameObjects.add(c);
     }
 
     public void gameObjectDestroyed(GameObjectEvent e){ 
         System.out.println(e.getTarget() + " is to be destroyed");
+        GameObject t=e.getTarget();
+        m_gameObjects.remove(t);
+        m_world.destroyBody(t.getBody());
+        // TODO remove target
+        // TODO remove taget body from m_world
     }
 
+    // Contact Listener manages bullet damage
+    // TODO remove this from Game to seperate points manager
+    // see integrations/slick/SlickTestMain.java 
+    public void add(ContactPoint p){
+        System.out.println("contact made");
+    }
+    public void persist(ContactPoint p){
+    }
+    public void remove(ContactPoint p){
+    } 
+    public void result(ContactResult p){
+    }
 }
