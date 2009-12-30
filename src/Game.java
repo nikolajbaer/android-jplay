@@ -17,6 +17,7 @@ public class Game implements GameObjectEventListener,ContactListener {
     private float m_height;
     private Body[] m_boundingBox;
     private ArrayList<GameObject> m_gameObjects;
+    private ArrayList<GameObject> m_toRemove;
     private PlayerObject m_player;
 
     public static final float PPM = 10.0f;
@@ -45,6 +46,8 @@ public class Game implements GameObjectEventListener,ContactListener {
         m_boundingBox[3]=createStaticRect( 0.0f,m_height, m_width, 10.0f); //bottom
 
         m_gameObjects=new ArrayList<GameObject>();
+        m_toRemove=new ArrayList<GameObject>();
+
 
         // for now generate game tanks
         float[] verts={-1.0f,1.0f, 0.0f,-2.0f,1.0f,1.0f};
@@ -141,6 +144,13 @@ public class Game implements GameObjectEventListener,ContactListener {
     }
 
     public void tick(){
+        // TODO use iterators
+        // TODO use queue for toRemove
+        for(int i=0;i<m_toRemove.size();i++){
+            GameObject goner=m_toRemove.get(i);
+            removeGameObject(goner);
+            m_toRemove.remove(goner);
+        }
         for(int i=0;i<m_gameObjects.size();i++){
             m_gameObjects.get(i).tick();
         }
@@ -168,12 +178,15 @@ public class Game implements GameObjectEventListener,ContactListener {
         // TODO remove taget body from m_world
     }
 
+    private void queueRemoveGameObject(GameObject go){
+        m_toRemove.add(go);
+    }
+
     private void removeGameObject(GameObject go){
         Body b=go.getBody();
         b.setUserData(null);
         m_world.destroyBody(b);
-        // still draw to see if it is really disappearing
-        //m_gameObjects.remove(go);
+        m_gameObjects.remove(go);
    }
 
     // Contact Listener manages bullet damage
@@ -192,20 +205,21 @@ public class Game implements GameObjectEventListener,ContactListener {
         boolean removeg2=false; 
         if(g1 != null && g2 != null){
             if(g1.doesDamage()){
-                removeg1=!g2.applyDamage(g1.getDamage());
+                removeg2=!g2.applyDamage(g1.getDamage());
             }
             if(g2.doesDamage()){
-                removeg2=!g1.applyDamage(g2.getDamage());
+                removeg1=!g1.applyDamage(g2.getDamage());
             }
         }
         if(g1 != null && !g1.survivesImpact()){ removeg1=true; }
         if(g2 != null && !g2.survivesImpact()){ removeg2=true; }
 
+        // we have to queue a remove because this is locked during callbacks
         if(removeg1){
-            removeGameObject(g1);
+            queueRemoveGameObject(g1);
         }
         if(removeg2){
-             removeGameObject(g2);
+            queueRemoveGameObject(g2);
         }
     }
 
