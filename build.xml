@@ -1,5 +1,10 @@
 <project>
-    <property name="lib.dir" value="lib"/>
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir"     value="${build.dir}/jar"/>
+    <property name="lib.dir"     value="lib"/>
+    <property name="main-class" value="JPlay" />
 
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
@@ -9,23 +14,30 @@
         <delete dir="build"/>
     </target>
 
-    <target name="build">
-        <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes" classpathref="classpath" />
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" />
     </target>
 
-    <target name="jar">
-        <mkdir dir="build/jar"/>
-        <jar destfile="build/jar/JPlay.jar" basedir="build/classes">
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="build/jar/JPlay.jar" basedir="${classes.dir}">
             <manifest>
                 <attribute name="Main-Class" value="JPlay"/>
             </manifest>
         </jar>
     </target>
 
-    <target name="run">
-        <java jar="build/jar/JPlay.jar" fork="true" classpathref="classpath" />
+    <target name="run" depends="jar">
+        <java classname="${main-class}" fork="true">
+            <classpath>
+                <path refid="classpath"/>
+                <path location="${jar.dir}/${ant.project.name}.jar"/>
+            </classpath>
+        </java>
     </target>
+
+    <target name="main" depends="clean,run"/>
 
 </project>
 

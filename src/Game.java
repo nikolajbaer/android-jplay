@@ -177,11 +177,13 @@ public class Game implements GameObjectEventListener,ContactListener {
         GameObject g1=(GameObject)b1.getUserData();
         GameObject g2=(GameObject)b2.getUserData();
 
+        /*
         if(g1.getClass()==BulletObject.class){
             System.out.println("contact with bullet1");
         }else if(g2.getClass()==BulletObject.class){
             System.out.println("contact with bullet2");
         }
+        */
     }
     public void persist(ContactPoint p){
     }
