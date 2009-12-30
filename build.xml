@@ -32,7 +32,8 @@
         <java classname="${main-class}" fork="true">
             <classpath>
                 <path refid="classpath"/>
-                <path location="${jar.dir}/${ant.project.name}.jar"/>
+                <path location="${jar.dir}/JPlay.jar"/>
+                <path location="${lib.dir}/jbox2d-2.0.1-full.jar"/>
             </classpath>
         </java>
     </target>
