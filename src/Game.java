@@ -171,7 +171,17 @@ public class Game implements GameObjectEventListener,ContactListener {
     // TODO remove this from Game to seperate points manager
     // see integrations/slick/SlickTestMain.java 
     public void add(ContactPoint p){
-        System.out.println("contact made");
+        //System.out.println("contact made");
+        Body b1=p.shape1.getBody();
+        Body b2=p.shape2.getBody();
+        GameObject g1=(GameObject)b1.getUserData();
+        GameObject g2=(GameObject)b2.getUserData();
+
+        if(g1.getClass()==BulletObject.class){
+            System.out.println("contact with bullet1");
+        }else if(g2.getClass()==BulletObject.class){
+            System.out.println("contact with bullet2");
+        }
     }
     public void persist(ContactPoint p){
     }

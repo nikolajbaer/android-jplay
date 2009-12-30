@@ -21,8 +21,7 @@ public class BulletObject extends GameObject {
         //int mp=(int)(pixelsPerMeter);
         //g.fillRect(-mp,-mp,mp*2,mp*2);
         int w=(int)(0.5*Game.PPM);
-        g.fillOval((int)p.x,(int)p.y,w,w);
- 
+        g.fillOval(0,0,w,w);
     }
 
 }

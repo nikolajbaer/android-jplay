@@ -83,9 +83,9 @@ public class PlayerObject extends PolygonGameObject {
         // Easy! Events!
         Body b=Game.game.createCircle(5.0f,0.5f);
         BulletObject bo=new BulletObject(b,5);
-        b.setXForm(m_body.getPosition(),m_body.getAngle());
+        b.setXForm(m_body.getWorldCenter(),m_body.getAngle());
         b.setBullet(true);
-        //b.setLinearVelocity(getDir().mul(10));
+        b.setLinearVelocity(getDir().mul(10));
         dispatchGameObjectCreatedEvent(new GameObjectEvent(this,bo)); 
     }
 

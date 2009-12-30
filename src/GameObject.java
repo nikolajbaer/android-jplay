@@ -66,6 +66,7 @@ public abstract class GameObject {
     public boolean doesDamage(){
         return m_damage > 0;
     }
+
 }
 
 
