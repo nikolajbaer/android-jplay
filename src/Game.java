@@ -45,6 +45,8 @@ public class Game implements GameObjectEventListener,ContactListener {
         m_boundingBox[3]=createStaticRect( 0.0f,m_height, m_width, 10.0f); //bottom
 
         m_gameObjects=new ArrayList<GameObject>();
+
+        // for now generate game tanks
         float[] verts={-1.0f,1.0f, 0.0f,-2.0f,1.0f,1.0f};
         for(int i=0;i<5;i++){
             //Body b=createRect(0.5f,-1.0f,-1.0f,2.0f,2.0f);
@@ -53,6 +55,7 @@ public class Game implements GameObjectEventListener,ContactListener {
             b.setXForm(new Vec2(i*4+2,10.0f),i);
             PlayerObject po=new PlayerObject(b,verts,(i==0)?Color.red:Color.blue);
             po.addGameObjectEventListener(this);
+            po.getBody().setUserData(po); // TODO make this less hackish 
             m_gameObjects.add(po);
             if(i==0){ m_player=po; }
         }
@@ -160,31 +163,52 @@ public class Game implements GameObjectEventListener,ContactListener {
 
     public void gameObjectDestroyed(GameObjectEvent e){ 
         System.out.println(e.getTarget() + " is to be destroyed");
-        GameObject t=e.getTarget();
-        m_gameObjects.remove(t);
-        m_world.destroyBody(t.getBody());
         // TODO remove target
+        removeGameObject(e.getTarget());
         // TODO remove taget body from m_world
     }
+
+    private void removeGameObject(GameObject go){
+        Body b=go.getBody();
+        b.setUserData(null);
+        m_world.destroyBody(b);
+        // still draw to see if it is really disappearing
+        //m_gameObjects.remove(go);
+   }
 
     // Contact Listener manages bullet damage
     // TODO remove this from Game to seperate points manager
     // see integrations/slick/SlickTestMain.java 
     public void add(ContactPoint p){
-        //System.out.println("contact made");
         Body b1=p.shape1.getBody();
         Body b2=p.shape2.getBody();
+        //System.out.println("contact made" + b1 +" - +"+b2);
+
         GameObject g1=(GameObject)b1.getUserData();
         GameObject g2=(GameObject)b2.getUserData();
 
-        /*
-        if(g1.getClass()==BulletObject.class){
-            System.out.println("contact with bullet1");
-        }else if(g2.getClass()==BulletObject.class){
-            System.out.println("contact with bullet2");
+        /* apply damage and remove objects if needed */       
+        boolean removeg1=false;
+        boolean removeg2=false; 
+        if(g1 != null && g2 != null){
+            if(g1.doesDamage()){
+                removeg1=!g2.applyDamage(g1.getDamage());
+            }
+            if(g2.doesDamage()){
+                removeg2=!g1.applyDamage(g2.getDamage());
+            }
         }
-        */
+        if(g1 != null && !g1.survivesImpact()){ removeg1=true; }
+        if(g2 != null && !g2.survivesImpact()){ removeg2=true; }
+
+        if(removeg1){
+            removeGameObject(g1);
+        }
+        if(removeg2){
+             removeGameObject(g2);
+        }
     }
+
     public void persist(ContactPoint p){
     }
     public void remove(ContactPoint p){

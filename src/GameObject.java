@@ -67,6 +67,18 @@ public abstract class GameObject {
         return m_damage > 0;
     }
 
+    public int getDamage(){
+        return m_damage;
+    }
+
+    /* return true if it survives the damage done */
+    public boolean applyDamage(int d){
+        return true;
+    }
+
+    public boolean survivesImpact(){
+        return true;
+    }
 }
 
 

@@ -64,6 +64,8 @@ public class PlayerObject extends PolygonGameObject {
     }
 
     public void draw( Graphics2D g ){
+        Stroke orig_s=g.getStroke();
+        g.setStroke(new BasicStroke(2.0f)); 
         g.setColor(color);
         Vec2 p=Game.toScreen(m_body.getPosition());
         g.translate(p.x,p.y);
@@ -72,6 +74,7 @@ public class PlayerObject extends PolygonGameObject {
         //int mp=(int)(pixelsPerMeter);
         //g.fillRect(-mp,-mp,mp*2,mp*2);
         g.drawPolygon(x_pts,y_pts,x_pts.length);
+        g.setStroke(orig_s);
     }
 
     public void tick(){
@@ -81,15 +84,23 @@ public class PlayerObject extends PolygonGameObject {
     public void triggerOn(){
         // TODO how does a gameobject spawn a new gameobject?
         // Easy! Events!
+        Vec2 d=getDir();
         Body b=Game.game.createCircle(5.0f,0.5f);
         BulletObject bo=new BulletObject(b,5);
-        b.setXForm(m_body.getWorldCenter(),m_body.getAngle());
+        bo.getBody().setUserData(bo); // TODO make this not a hack
+        b.setXForm(m_body.getWorldCenter().add(d.mul(2)),m_body.getAngle());
         b.setBullet(true);
-        b.setLinearVelocity(getDir().mul(10));
+        b.setLinearVelocity(d.mul(10));
         dispatchGameObjectCreatedEvent(new GameObjectEvent(this,bo)); 
     }
 
     public void triggerOff(){
+    } 
+
+    public boolean applyDamage(int d){
+        health-=d;
+        System.out.println(this+" health now "+health);
+        return health>0;
     } 
 }
 

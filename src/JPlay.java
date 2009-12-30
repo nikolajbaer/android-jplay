@@ -77,7 +77,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
     }
 
     public void render( ) {
-        m_backGraphics.setColor( Color.gray ) ;
+        m_backGraphics.setColor( Color.black ) ;
         m_backGraphics.fillRect( 0,0, m_gameWidth,m_gameHeight) ;
         m_game.draw(m_backGraphics);
         Graphics g = getGraphics();

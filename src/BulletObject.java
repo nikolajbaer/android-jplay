@@ -13,7 +13,7 @@ public class BulletObject extends GameObject {
 
     public void draw( Graphics2D g ){
         // TODO: figure out why this isn't drawing in the right position!?!?!
-        g.setColor(Color.black);
+        g.setColor(Color.white);
         Vec2 p=Game.toScreen(m_body.getPosition());
         g.translate(p.x,p.y);
         //g.rotate(m_body.getAngle());
@@ -24,4 +24,11 @@ public class BulletObject extends GameObject {
         g.fillOval(0,0,w,w);
     }
 
+    public boolean survivesImpact(){
+        return false;
+    }
+
+    public boolean doesDamage(){
+        return true;
+    }
 }
