@@ -5,7 +5,7 @@ import java.awt.geom.*;
 import java.lang.Math;
 import java.util.ArrayList;
 
-
+// CONSIDER maybe this should be an interface?
 public abstract class GameObject {
     protected Body m_body;
     protected float thruster;
@@ -13,7 +13,7 @@ public abstract class GameObject {
     protected static float MAX_ANG_VEL=1.0f;
 
     protected ArrayList<GameObjectEventListener> m_gameObjectEventListeners;
-    protected int m_damage=0;
+    protected int m_damage=0; // CONSIDER do i really need this here?
 
     public GameObject(Body b){
         m_body=b;
@@ -31,7 +31,7 @@ public abstract class GameObject {
         return rotate(new Vec2(0,-1),m_body.getAngle());
     }
 
-    public abstract void tick();
+    public void tick(){}
 
     // TODO this should be abstracted into a GameObjectDisplay class
     // so i can make game code separate from display code to port to Android
@@ -78,6 +78,10 @@ public abstract class GameObject {
 
     public boolean survivesImpact(){
         return true;
+    }
+
+    /* triggered when an object is being destroyed (e.g. make shrapnel or something) */
+    public void doDestroy(){
     }
 }
 

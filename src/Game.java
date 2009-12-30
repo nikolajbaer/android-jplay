@@ -167,12 +167,10 @@ public class Game implements GameObjectEventListener,ContactListener {
 
     public void gameObjectCreated(GameObjectEvent e){
         GameObject c=e.getCreated();
-        System.out.println(e.getTarget() + " created "+c);
         m_gameObjects.add(c);
     }
 
     public void gameObjectDestroyed(GameObjectEvent e){ 
-        System.out.println(e.getTarget() + " is to be destroyed");
         // TODO remove target
         removeGameObject(e.getTarget());
         // TODO remove taget body from m_world
@@ -215,11 +213,15 @@ public class Game implements GameObjectEventListener,ContactListener {
         if(g2 != null && !g2.survivesImpact()){ removeg2=true; }
 
         // we have to queue a remove because this is locked during callbacks
+        // CONSIDER do i destroy a game object here or in the remove. 
+        // If it is here that allows me to remove a game object in the future without a fancy destroy
         if(removeg1){
             queueRemoveGameObject(g1);
+            g1.doDestroy();
         }
         if(removeg2){
             queueRemoveGameObject(g2);
+            g2.doDestroy();
         }
     }
 

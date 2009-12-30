@@ -82,8 +82,9 @@ public class PlayerObject extends PolygonGameObject {
     }
 
     public void triggerOn(){
-        // TODO how does a gameobject spawn a new gameobject?
-        // Easy! Events!
+        // TODO should be able to just tell the Game object to
+        // create a BulletObject going in V direction, not create a body as well
+        // TODO while trigger is on manage firing in tick with a reloadRate
         Vec2 d=getDir();
         Body b=Game.game.createCircle(5.0f,0.5f);
         BulletObject bo=new BulletObject(b,5);
@@ -99,7 +100,6 @@ public class PlayerObject extends PolygonGameObject {
 
     public boolean applyDamage(int d){
         health-=d;
-        System.out.println(this+" health now "+health);
         return health>0;
     } 
 }

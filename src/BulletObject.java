@@ -9,8 +9,6 @@ public class BulletObject extends GameObject {
         this.m_damage=damage;
     }
 
-    public void tick(){ }
-
     public void draw( Graphics2D g ){
         // TODO: figure out why this isn't drawing in the right position!?!?!
         g.setColor(Color.white);
