@@ -5,12 +5,12 @@ import java.awt.geom.*;
 import java.lang.Math;
 
 public class PlayerObject extends PolygonGameObject {
-    private Color color;
+    private Color m_color;
     private int health;
     
     public PlayerObject(Body b,float[] vertices,Color c){
         super(b,vertices);
-        color=c; 
+        m_color=c; 
         health=100;
 
     }
@@ -66,7 +66,7 @@ public class PlayerObject extends PolygonGameObject {
     public void draw( Graphics2D g ){
         Stroke orig_s=g.getStroke();
         g.setStroke(new BasicStroke(2.0f)); 
-        g.setColor(color);
+        g.setColor(m_color);
         Vec2 p=Game.toScreen(m_body.getPosition());
         g.translate(p.x,p.y);
         g.rotate(m_body.getAngle());
@@ -87,7 +87,7 @@ public class PlayerObject extends PolygonGameObject {
         // TODO while trigger is on manage firing in tick with a reloadRate
         Vec2 d=getDir();
         Body b=Game.game.createCircle(5.0f,0.5f);
-        BulletObject bo=new BulletObject(b,5);
+        BulletObject bo=new BulletObject(b,50);
         bo.getBody().setUserData(bo); // TODO make this not a hack
         b.setXForm(m_body.getWorldCenter().add(d.mul(3)),m_body.getAngle());
         b.setBullet(true);
@@ -102,5 +102,15 @@ public class PlayerObject extends PolygonGameObject {
         health-=d;
         return health>0;
     } 
+
+    public void doDestroy(){
+        for(int i=0;i<1;i++){
+            Body b=Game.game.createCircle(0.5f,0.2f);
+            ShrapnelObject so=new ShrapnelObject(b,m_color);
+            b.setXForm(m_body.getWorldCenter(),0);
+            b.setLinearVelocity(new Vec2(1,0));
+        }
+    }
+
 }
 

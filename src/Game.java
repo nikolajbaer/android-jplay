@@ -77,7 +77,6 @@ public class Game implements GameObjectEventListener,ContactListener {
             m_gameObjects.add(new GameObject(b,verts2));
         }
         */
-        game=this;
     }
 
     public Body createCircle(float density, float radius){
@@ -223,12 +222,12 @@ public class Game implements GameObjectEventListener,ContactListener {
         // CONSIDER do i destroy a game object here or in the remove. 
         // If it is here that allows me to remove a game object in the future without a fancy destroy
         if(removeg1){
-            queueRemoveGameObject(g1);
             g1.doDestroy();
+            queueRemoveGameObject(g1);
         }
         if(removeg2){
-            queueRemoveGameObject(g2);
             g2.doDestroy();
+            queueRemoveGameObject(g2);
         }
     }
 

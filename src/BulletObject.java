@@ -10,7 +10,6 @@ public class BulletObject extends GameObject {
     }
 
     public void draw( Graphics2D g ){
-        // TODO: figure out why this isn't drawing in the right position!?!?!
         g.setColor(Color.white);
         Vec2 p=Game.toScreen(m_body.getPosition());
         g.translate(p.x,p.y);
