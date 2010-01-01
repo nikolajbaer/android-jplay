@@ -1,0 +1,6 @@
+1/1/2010 
+So far development is proceeding nicely. Jbox2d was a cinch to integrate, and using swing to prototype my game engine is far easier than dealing with the android debugger/emulator. I am still unsure as to if I will leave this as a line drawing game, or make it have sprites. I wonder which would be faster. I would imagine i would need opengl es to do it fast on android. I also don't want to be too much a copycat of d-zone, the insipiration for this game.
+
+Right now I need to split up my project into packages, it is getting sufficiently complex. I need to build a weapons class hierarchy, and bolster the tanks so they have "weapon ports". Also, my game AI could be alot more interesting than the basic shuffle it does right now. Generally I think I will put off scoring management and purchasing of weapons until the end, instead focusing on each arena battle now, and constructing the players/ai in my game initialization. The game mechanics are also a bit wonky still. Physics is fun, but it will require alot of tuning to feel fun.
+
+
