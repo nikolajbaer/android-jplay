@@ -104,13 +104,18 @@ public class PlayerObject extends PolygonGameObject {
     } 
 
     public void doDestroy(){
+        // cannot spawn here as this is a callback from a contact
+        // CONSIDER add a queue for new game objects to be created
+        // would need to remove the responsibiltiy of creating the 
+        // body from the gaem object..
+        /*
         for(int i=0;i<1;i++){
             Body b=Game.game.createCircle(0.5f,0.2f);
             ShrapnelObject so=new ShrapnelObject(b,m_color);
             b.setXForm(m_body.getWorldCenter(),0);
             b.setLinearVelocity(new Vec2(1,0));
-        }
+        }   
+        */
     }
-
 }
 
