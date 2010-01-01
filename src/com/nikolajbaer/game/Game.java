@@ -1,3 +1,9 @@
+package com.nikolajbaer.game;
+
+/* java */
+import java.util.ArrayList;
+
+/* jbox2d */
 import org.jbox2d.dynamics.World;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.collision.AABB;
@@ -6,9 +12,13 @@ import org.jbox2d.collision.PolygonDef;
 import org.jbox2d.collision.ShapeDef;
 import org.jbox2d.dynamics.*;
 import org.jbox2d.dynamics.contacts.*;
+
+/* AWT Specific */
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
+
+/* local */
+import com.nikolajbaer.game.objects.*;
 
 // CONSIDER phsyics should be refactored into its own engine
 public class Game implements GameObjectEventListener,ContactListener {

@@ -1,6 +1,14 @@
+package com.nikolajbaer.game.objects;
+
+/* jbox2d */
 import org.jbox2d.dynamics.Body; import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.common.Vec2;
+
+/* AWT */
 import java.awt.*;
+
+/* local */
+import com.nikolajbaer.game.Game;
 
 // CONSIDER awkward, could be refactored
 public class PolygonGameObject extends GameObject {

@@ -1,4 +1,10 @@
+package com.nikolajbaer.game;
+
+/* java */
 import java.lang.Math;
+
+/* local */
+import com.nikolajbaer.game.objects.*;
 
 public class GamePlayer {
     private PlayerObject m_playerObject;

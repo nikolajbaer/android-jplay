@@ -1,4 +1,10 @@
+package com.nikolajbaer.game.objects;
+
+/* java */
 import java.util.EventObject;
+
+/* local */
+import com.nikolajbaer.game.Game;
 
 public class GameObjectEvent extends EventObject {
     private GameObject created;

@@ -1,18 +1,30 @@
-import java.awt.*;
+package com.nikolajbaer.game.objects;
+
+/* java */
+import java.lang.Math;
+
+/* jbox2d */
 import org.jbox2d.dynamics.Body; import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.common.Vec2;
+
+/* AWT */
 import java.awt.geom.*;
-import java.lang.Math;
+import java.awt.*;
+
+/* local */
+import com.nikolajbaer.game.Game;
+import com.nikolajbaer.game.weapons.*;
 
 public class PlayerObject extends PolygonGameObject {
     private Color m_color;
-    private int health;
+    private int health; // TODO make it shields + hull
+    private Weapon m_currentWeapon; // TODO make it have weapon ports
     
     public PlayerObject(Body b,float[] vertices,Color c){
         super(b,vertices);
         m_color=c; 
         health=100;
-
+        m_currentWeapon=new TankCannon();
     }
 
     public void left(){
@@ -78,6 +90,7 @@ public class PlayerObject extends PolygonGameObject {
     }
 
     public boolean tick(){
+        m_currentWeapon.tick(this);
         thrust(thruster);
         return true;
     }
@@ -86,6 +99,9 @@ public class PlayerObject extends PolygonGameObject {
         // TODO should be able to just tell the Game object to
         // create a BulletObject going in V direction, not create a body as well
         // TODO while trigger is on manage firing in tick with a reloadRate
+        m_currentWeapon.triggerOn();
+
+        /*
         Vec2 d=getDir();
         Body b=Game.game.createCircle(5.0f,0.5f);
         BulletObject bo=new BulletObject(b,50);
@@ -93,9 +109,11 @@ public class PlayerObject extends PolygonGameObject {
         b.setBullet(true);
         b.setLinearVelocity(d.mul(10));
         emitGameObject(bo); 
+        */
     }
 
     public void triggerOff(){
+        m_currentWeapon.triggerOff();
     } 
 
     public boolean applyDamage(int d){

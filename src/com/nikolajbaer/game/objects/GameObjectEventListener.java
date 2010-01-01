@@ -1,3 +1,6 @@
+package com.nikolajbaer.game.objects;
+
+/* java */
 import java.util.EventListener;
 
 public interface GameObjectEventListener extends EventListener{

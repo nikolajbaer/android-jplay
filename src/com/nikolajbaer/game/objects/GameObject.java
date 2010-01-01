@@ -1,9 +1,21 @@
-import org.jbox2d.dynamics.Body; import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.common.Vec2;
-import java.awt.*;
-import java.awt.geom.*;
+package com.nikolajbaer.game.objects;
+
+/* java */
 import java.lang.Math;
 import java.util.ArrayList;
+
+/* jbox2d */
+import org.jbox2d.dynamics.Body; 
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.common.Vec2;
+
+/* AWT */
+import java.awt.*;
+import java.awt.geom.*;
+
+/* local */
+import com.nikolajbaer.game.Game;
+
 
 // CONSIDER maybe this should be an interface?
 public abstract class GameObject {
@@ -88,7 +100,9 @@ public abstract class GameObject {
     public void doDestroy(){
     }
 
-    protected void emitGameObject(GameObject go){
+    // HACK made this public so the weapon can use the game object's emit..
+    // CONSIDER should the weapon be allowed to emit its own objects? seems like something it would do
+    public void emitGameObject(GameObject go){
         dispatchGameObjectCreatedEvent(new GameObjectEvent(this,go)); 
     }
 }

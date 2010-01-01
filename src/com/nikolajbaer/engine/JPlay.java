@@ -1,8 +1,14 @@
+package com.nikolajbaer.engine;
+
+/* AWT */
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.*;
 import java.awt.event.KeyEvent;
+
+/* local */
+import com.nikolajbaer.game.Game;
 
 public class JPlay extends JFrame implements ActionListener { //implements Runnable{
     private Game m_game;
