@@ -59,24 +59,12 @@ public class Game implements GameObjectEventListener,ContactListener {
             b.setXForm(new Vec2(i*4+2,10.0f),i);
             PlayerObject po=new PlayerObject(b,verts,(i==0)?Color.red:Color.blue);
             po.addGameObjectEventListener(this);
-            po.getBody().setUserData(po); // TODO make this less hackish 
-            m_gameObjects.add(po);
+            addGameObject(po);
             if(i==0){ m_player=po; }else{
                 GamePlayer gp=new GamePlayer(po);
                 m_gamePlayers.add(gp);
             }
         }
-    
-        /*
-        float[] verts2={1.0f,1.0f,0.0f,2.0f,-1.0f,-2.0f,3.0f,-2.0f,3.0f,0.0f};
-        for(int i=0;i<3;i++){
-            //Body b=createRect(0.5f,-1.0f,-1.0f,2.0f,2.0f);
-            Body b=createPolygon(1.0f, verts2 );
-
-            b.setXForm(new Vec2(i*4+2,20.0f),i);
-            m_gameObjects.add(new GameObject(b,verts2));
-        }
-        */
     }
 
     public Body createCircle(float density, float radius){
@@ -155,7 +143,10 @@ public class Game implements GameObjectEventListener,ContactListener {
             m_toRemove.remove(goner);
         }
         for(int i=0;i<m_gameObjects.size();i++){
-            m_gameObjects.get(i).tick();
+            GameObject o=m_gameObjects.get(i);
+            if(!o.tick()){
+                removeGameObject(o);
+            }
         }
         for(int i=0;i<m_gamePlayers.size();i++){
             m_gamePlayers.get(i).tick();
@@ -172,21 +163,28 @@ public class Game implements GameObjectEventListener,ContactListener {
     }
 
     public void gameObjectCreated(GameObjectEvent e){
-        GameObject c=e.getCreated();
-        m_gameObjects.add(c);
+        addGameObject(e.getCreated());
+    }
+
+    public void addGameObject(GameObject go){
+        go.getBody().setUserData(go); // HACK
+        m_gameObjects.add(go);
     }
 
     public void gameObjectDestroyed(GameObjectEvent e){ 
-        // TODO remove target
         removeGameObject(e.getTarget());
-        // TODO remove taget body from m_world
     }
 
+    /* 
+        bodies can not be removed in a contact callback, so we must queue them 
+        queue is processed before tick
+    */
     private void queueRemoveGameObject(GameObject go){
         m_toRemove.add(go);
     }
 
     private void removeGameObject(GameObject go){
+        go.doDestroy();
         Body b=go.getBody();
         b.setUserData(null);
         m_world.destroyBody(b);
@@ -222,11 +220,9 @@ public class Game implements GameObjectEventListener,ContactListener {
         // CONSIDER do i destroy a game object here or in the remove. 
         // If it is here that allows me to remove a game object in the future without a fancy destroy
         if(removeg1){
-            g1.doDestroy();
             queueRemoveGameObject(g1);
         }
         if(removeg2){
-            g2.doDestroy();
             queueRemoveGameObject(g2);
         }
     }

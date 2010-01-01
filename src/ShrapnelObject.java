@@ -14,7 +14,7 @@ public class ShrapnelObject extends PolygonGameObject {
 
     public boolean survivesImpact(){
         impacts++;
-        return impacts < 1;
+        return impacts <= 0; // die on first impact (otherwise would be nice to die off after a time..
     }
 
     public boolean doesDamage(){

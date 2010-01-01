@@ -19,8 +19,6 @@ public class PolygonGameObject extends GameObject {
         }
     }
 
-    public void tick(){ }
-
     public void draw( Graphics2D g ){ 
         g.setColor(Color.black);
         Vec2 p=Game.toScreen(m_body.getPosition());

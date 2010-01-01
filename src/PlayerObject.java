@@ -77,8 +77,9 @@ public class PlayerObject extends PolygonGameObject {
         g.setStroke(orig_s);
     }
 
-    public void tick(){
+    public boolean tick(){
         thrust(thruster);
+        return true;
     }
 
     public void triggerOn(){
@@ -88,11 +89,10 @@ public class PlayerObject extends PolygonGameObject {
         Vec2 d=getDir();
         Body b=Game.game.createCircle(5.0f,0.5f);
         BulletObject bo=new BulletObject(b,50);
-        bo.getBody().setUserData(bo); // TODO make this not a hack
         b.setXForm(m_body.getWorldCenter().add(d.mul(3)),m_body.getAngle());
         b.setBullet(true);
         b.setLinearVelocity(d.mul(10));
-        dispatchGameObjectCreatedEvent(new GameObjectEvent(this,bo)); 
+        emitGameObject(bo); 
     }
 
     public void triggerOff(){
@@ -104,18 +104,16 @@ public class PlayerObject extends PolygonGameObject {
     } 
 
     public void doDestroy(){
-        // cannot spawn here as this is a callback from a contact
-        // CONSIDER add a queue for new game objects to be created
-        // would need to remove the responsibiltiy of creating the 
-        // body from the gaem object..
-        /*
-        for(int i=0;i<1;i++){
+        int n=6;
+        float astep=(float)(2*Math.PI)/n;
+        for(int i=0;i<n;i++){
             Body b=Game.game.createCircle(0.5f,0.2f);
             ShrapnelObject so=new ShrapnelObject(b,m_color);
-            b.setXForm(m_body.getWorldCenter(),0);
-            b.setLinearVelocity(new Vec2(1,0));
-        }   
-        */
+            b.setXForm(m_body.getWorldCenter().add(rotate(new Vec2(2,0),i*astep)),0);
+            b.setLinearVelocity(rotate(new Vec2(10,0),i*astep));
+            emitGameObject(so);
+        }  
+       
     }
 }
 

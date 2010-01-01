@@ -31,7 +31,11 @@ public abstract class GameObject {
         return rotate(new Vec2(0,-1),m_body.getAngle());
     }
 
-    public void tick(){}
+    /* tick
+     *
+     * do whatever per step. return false if this game object is to be removed.
+     */
+    public boolean tick(){ return true; }
 
     // TODO this should be abstracted into a GameObjectDisplay class
     // so i can make game code separate from display code to port to Android
@@ -82,6 +86,10 @@ public abstract class GameObject {
 
     /* triggered when an object is being destroyed (e.g. make shrapnel or something) */
     public void doDestroy(){
+    }
+
+    protected void emitGameObject(GameObject go){
+        dispatchGameObjectCreatedEvent(new GameObjectEvent(this,go)); 
     }
 }
 
