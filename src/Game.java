@@ -18,6 +18,7 @@ public class Game implements GameObjectEventListener,ContactListener {
     private Body[] m_boundingBox;
     private ArrayList<GameObject> m_gameObjects;
     private ArrayList<GameObject> m_toRemove;
+    private ArrayList<GamePlayer> m_gamePlayers;
     private PlayerObject m_player;
 
     public static final float PPM = 10.0f;
@@ -47,7 +48,7 @@ public class Game implements GameObjectEventListener,ContactListener {
 
         m_gameObjects=new ArrayList<GameObject>();
         m_toRemove=new ArrayList<GameObject>();
-
+        m_gamePlayers=new ArrayList<GamePlayer>();
 
         // for now generate game tanks
         float[] verts={-1.0f,1.0f, 0.0f,-2.0f,1.0f,1.0f};
@@ -60,7 +61,10 @@ public class Game implements GameObjectEventListener,ContactListener {
             po.addGameObjectEventListener(this);
             po.getBody().setUserData(po); // TODO make this less hackish 
             m_gameObjects.add(po);
-            if(i==0){ m_player=po; }
+            if(i==0){ m_player=po; }else{
+                GamePlayer gp=new GamePlayer(po);
+                m_gamePlayers.add(gp);
+            }
         }
     
         /*
@@ -153,6 +157,9 @@ public class Game implements GameObjectEventListener,ContactListener {
         }
         for(int i=0;i<m_gameObjects.size();i++){
             m_gameObjects.get(i).tick();
+        }
+        for(int i=0;i<m_gamePlayers.size();i++){
+            m_gamePlayers.get(i).tick();
         }
         m_world.step(1.0f/60.0f,1);
     }
