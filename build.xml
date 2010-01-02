@@ -4,7 +4,7 @@
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
     <property name="lib.dir"     value="lib"/>
-    <property name="main-class" value="JPlay" />
+    <property name="main-class" value="com.nikolajbaer.engine.JPlay" />
 
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
@@ -24,14 +24,17 @@
         <mkdir dir="${jar.dir}"/>
         <jar destfile="build/jar/JPlay.jar" basedir="${classes.dir}">
             <manifest>
-                <attribute name="Main-Class" value="com.nikolajbaer.engine.JPlay"/>
+                <attribute name="Main-Class" value="%{main-class}"/>
             </manifest>
         </jar>
     </target>
 
     <target name="run" depends="jar">
         <java classname="${main-class}" fork="true">
-            <classpath path="${classpath}" />
+            <classpath path="${classpath}">
+                <path refid="classpath"/>
+                <path location="${jar.dir}/${ant.project.name}.jar"/>
+            </classpath>
         </java>
     </target>
 
