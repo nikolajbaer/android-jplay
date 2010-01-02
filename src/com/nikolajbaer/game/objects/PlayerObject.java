@@ -16,14 +16,24 @@ import com.nikolajbaer.game.Game;
 import com.nikolajbaer.game.weapons.*;
 
 public class PlayerObject extends PolygonGameObject {
-    private Color m_color;
-    private int health; // TODO make it shields + hull
-    private Weapon m_currentWeapon; // TODO make it have weapon ports
+    protected Color m_color;
+    protected int m_hull; // TODO make it shields + hull
+    protected int m_shields;
+    protected int m_energy;
+    protected static final int SHIELD_MAX = 100;
+    protected static final int HULL_MAX = 100;
+    protected static final int ENERGY_MAX = 100;
+    protected static final int ENERGY_RECHARGE_RATE = 1;
+    protected static final int SHIELD_RECHARGE_RATE = 1;
+
+    protected Weapon m_currentWeapon; // TODO make it have weapon ports
     
     public PlayerObject(Body b,float[] vertices,Color c){
         super(b,vertices);
         m_color=c; 
-        health=100;
+        m_hull=HULL_MAX;
+        m_shields=SHIELD_MAX;
+        m_energy=ENERGY_MAX;
         m_currentWeapon=new TankCannon();
     }
 
@@ -83,42 +93,44 @@ public class PlayerObject extends PolygonGameObject {
         g.translate(p.x,p.y);
         g.rotate(m_body.getAngle());
 
-        //int mp=(int)(pixelsPerMeter);
-        //g.fillRect(-mp,-mp,mp*2,mp*2);
         g.drawPolygon(x_pts,y_pts,x_pts.length);
         g.setStroke(orig_s);
     }
 
     public boolean tick(){
+        // recharge energy and shields
+        m_energy+=ENERGY_RECHARGE_RATE;
+        if(m_energy > ENERGY_MAX){ m_energy=ENERGY_MAX; }
+        // CONSIDER should shields make energy recharge slower?        
+        m_shields += SHIELD_RECHARGE_RATE;
+        if(m_shields > SHIELD_MAX){ m_shields = SHIELD_MAX; } 
+
         m_currentWeapon.tick(this);
         thrust(thruster);
         return true;
     }
 
     public void triggerOn(){
-        // TODO should be able to just tell the Game object to
-        // create a BulletObject going in V direction, not create a body as well
-        // TODO while trigger is on manage firing in tick with a reloadRate
         m_currentWeapon.triggerOn();
-
-        /*
-        Vec2 d=getDir();
-        Body b=Game.game.createCircle(5.0f,0.5f);
-        BulletObject bo=new BulletObject(b,50);
-        b.setXForm(m_body.getWorldCenter().add(d.mul(3)),m_body.getAngle());
-        b.setBullet(true);
-        b.setLinearVelocity(d.mul(10));
-        emitGameObject(bo); 
-        */
     }
 
     public void triggerOff(){
         m_currentWeapon.triggerOff();
     } 
 
+    // CONSIDER make beam weapons apply more damage to shields, and physical apply less,
+    // with vice versa on the hull
     public boolean applyDamage(int d){
-        health-=d;
-        return health>0;
+        m_shields -= d;
+        if(m_shields < 0){
+            //System.out.println("applying damage to hull!");
+            int d2=-1*m_shields;
+            m_hull -= d2;
+            if(m_hull < 0){
+                return false;
+            }
+        }
+        return true;
     } 
 
     public void doDestroy(){
@@ -132,6 +144,22 @@ public class PlayerObject extends PolygonGameObject {
             emitGameObject(so);
         }  
        
+    }
+
+    public int getEnergy(){ return m_energy; } 
+
+    public int getHull(){ return m_hull; }
+
+    public int getShields(){ return m_shields; }
+
+    /* Draws energy from ship. Return the amount drawn (may be less than requested) */
+    public int drawEnergy(int e){
+        int l=m_energy-e;
+        if(l<0){ 
+            m_energy=0;
+            return e+l;
+        }
+        return l;
     }
 }
 

@@ -3,4 +3,9 @@ So far development is proceeding nicely. Jbox2d was a cinch to integrate, and us
 
 Right now I need to split up my project into packages, it is getting sufficiently complex. I need to build a weapons class hierarchy, and bolster the tanks so they have "weapon ports". Also, my game AI could be alot more interesting than the basic shuffle it does right now. Generally I think I will put off scoring management and purchasing of weapons until the end, instead focusing on each arena battle now, and constructing the players/ai in my game initialization. The game mechanics are also a bit wonky still. Physics is fun, but it will require alot of tuning to feel fun.
 
+1/2/2010
+Added hull/shields with a recharge rate. I need to put some visuals in there to see the hulls/shields/energy for the recharge. I also started a weapons framework, and made my initial weapon the "Tank Cannon". For now it draws some energy every time it shoots. An interesting thing would be to have the shields recharge from the energy, so once shields were all the way up, the energy would recharge faster.
+
+Meanwhile, watching the movie "Avatar" and realizing how much James Cameron pulled from so many existing movies/novels/video games, I realized that maybe I shouldn't feel so bad. This game is right now heavily inspired by D-Zone, but Julian Cochran (www.digitalscores.com/dzone), and I feel compelled to make it significantly different because I hate such uninspired copycatting, but the more I think about it rationally, the more I notice how much of gaming is that formulaic. Interesting quandary.
+
 

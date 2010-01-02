@@ -18,7 +18,8 @@ public abstract class Weapon {
     public abstract int getPortType(); 
 
     // the tick
-    public abstract void tick(GameObject parent);
+    // CONSIDER should this be a player object? what about a stationary cannon?
+    public abstract void tick(PlayerObject parent);
 
 }
     

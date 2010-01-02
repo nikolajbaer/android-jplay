@@ -16,6 +16,7 @@
     </target>
 
     <target name="compile">
+        <mkdir dir="${jar.dir}"/>
         <mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" debug="true" destdir="${classes.dir}" classpathref="classpath" />
     </target>

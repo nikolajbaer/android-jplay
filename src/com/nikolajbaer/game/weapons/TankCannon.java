@@ -26,20 +26,25 @@ public class TankCannon extends Weapon {
         m_shooting=false;
     }
 
-    public void tick(GameObject shooter){
-        System.out.println("ticking");
+    public void tick(PlayerObject shooter){
+        //System.out.println("ticking");
         if(m_shooting && m_reloadCount%10 == 0 ){
-            // TODO make it so the shooter can't get hit by their own bullets?
-            Vec2 d=shooter.getDir();
-            Body b=Game.game.createCircle(5.0f,0.5f);
-            BulletObject bo=new BulletObject(b,50);
-            b.setXForm(shooter.getBody().getWorldCenter().add(d.mul(4)),shooter.getBody().getAngle());
-            b.setBullet(true);
-            b.setLinearVelocity(d.mul(10).add(shooter.getBody().getLinearVelocity()));
-            // TODO drain energy usage from game object if this is a beam weapon
-            shooter.emitGameObject(bo); 
-            m_reloadCount=0;
-        }else{ System.out.println("reloading"); }
+            if(shooter.getEnergy() > 10){
+                shooter.drawEnergy(10);
+                // TODO make it so the shooter can't get hit by their own bullets?
+                Vec2 d=shooter.getDir();
+                Body b=Game.game.createCircle(5.0f,0.5f);
+                BulletObject bo=new BulletObject(b,50);
+                b.setXForm(shooter.getBody().getWorldCenter().add(d.mul(4)),shooter.getBody().getAngle());
+                b.setBullet(true);
+                b.setLinearVelocity(d.mul(10).add(shooter.getBody().getLinearVelocity()));
+                // TODO drain energy usage from game object if this is a beam weapon
+                shooter.emitGameObject(bo); 
+                m_reloadCount=0;
+            }else{
+                System.out.println("insufficient poewr, tank stall..");
+            }
+        }else{ /*System.out.println("reloading"); */ }
         // reload regardless
         m_reloadCount++;
     }
