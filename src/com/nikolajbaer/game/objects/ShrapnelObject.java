@@ -13,11 +13,13 @@ import com.nikolajbaer.game.Game;
 public class ShrapnelObject extends PolygonGameObject {
     private Color m_color;
     private int impacts;
+    private int m_size;
 
-    public ShrapnelObject(Body b,Color c){
+    public ShrapnelObject(Body b,Color c,int size){
         super(b,new float[]{-1,-1,0,1,1,-1});
         m_color=c;
         impacts=0;
+        m_size=size;
     }
 
     public boolean survivesImpact(){
@@ -33,7 +35,7 @@ public class ShrapnelObject extends PolygonGameObject {
         g.setColor(m_color);
         Vec2 p=Game.toScreen(m_body.getPosition());
         g.translate(p.x,p.y);
-        g.fillOval(0,0,2,2);
+        g.fillOval(0,0,m_size,m_size);
     }
 
 

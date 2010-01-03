@@ -37,6 +37,9 @@ public class PlayerObject extends PolygonGameObject {
         m_currentWeapon=new TankCannon();
     }
 
+    // TODO add alert system to warn player with issues in their tank
+    // e.g. shields down, hull level critical, cannon reloading stalled
+
     public void left(){
         //m_body.setAngularVelocity(-1.0f);
         if(m_body.getAngularVelocity() > -MAX_ANG_VEL){
@@ -138,9 +141,9 @@ public class PlayerObject extends PolygonGameObject {
         float astep=(float)(2*Math.PI)/n;
         for(int i=0;i<n;i++){
             Body b=Game.game.createCircle(0.5f,0.2f);
-            ShrapnelObject so=new ShrapnelObject(b,m_color);
-            b.setXForm(m_body.getWorldCenter().add(rotate(new Vec2(2,0),i*astep)),0);
-            b.setLinearVelocity(rotate(new Vec2(10,0),i*astep));
+            ShrapnelObject so=new ShrapnelObject(b,m_color,4);
+            b.setXForm(m_body.getWorldCenter().add(GameObject.rotate(new Vec2(2,0),i*astep)),0);
+            b.setLinearVelocity(GameObject.rotate(new Vec2(10,0),i*astep));
             emitGameObject(so);
         }  
        

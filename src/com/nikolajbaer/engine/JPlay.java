@@ -20,7 +20,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
 
     public JPlay(String name){
         super(name);
-        setSize(m_gameWidth+10,m_gameHeight+10);
+        setSize(m_gameWidth+10,m_gameHeight+20);
         m_backBuffer = new BufferedImage( m_gameWidth,m_gameHeight, BufferedImage.TYPE_INT_RGB ) ;
         m_backGraphics = (Graphics2D)m_backBuffer.getGraphics();
         m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

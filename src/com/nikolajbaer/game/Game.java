@@ -62,16 +62,23 @@ public class Game implements GameObjectEventListener,ContactListener {
 
         // for now generate game tanks
         float[] verts={-1.0f,1.0f, 0.0f,-2.0f,1.0f,1.0f};
-        for(int i=0;i<5;i++){
+
+        Vec2 mid=new Vec2(m_width/2.0f,m_height/2.0f);
+        Vec2 offset=new Vec2(m_width/2*0.75f,0);
+        int np=6;
+        for(int i=0;i<np;i++){
             //Body b=createRect(0.5f,-1.0f,-1.0f,2.0f,2.0f);
             Body b=createPolygon(1.0f, verts );
 
-            b.setXForm(new Vec2(i*4+2,10.0f),i);
+            double a=(2*Math.PI)/np;
+            Vec2 rv=GameObject.rotate( offset, (float)(i*a) );
+            float ra=(float)(i*a < Math.PI ? i*a+Math.PI : i*a-Math.PI);
+            b.setXForm( mid.add(rv) ,(float)(ra+Math.PI/2)); // i guess it goes from 0,1 not 1,0
             PlayerObject po=new PlayerObject(b,verts,(i==0)?Color.red:Color.blue);
             po.addGameObjectEventListener(this);
             addGameObject(po);
             if(i==0){ m_player=po; }else{
-                GamePlayer gp=new GamePlayer(po);
+                HunterPlayer gp=new HunterPlayer(po);
                 m_gamePlayers.add(gp);
             }
         }
