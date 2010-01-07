@@ -14,4 +14,8 @@ public abstract class GamePlayer {
     }
 
     public abstract void tick();
+
+    public GameObject getGameObject(){
+        return m_playerObject;
+    }
 }

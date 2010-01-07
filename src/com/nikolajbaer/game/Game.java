@@ -65,7 +65,7 @@ public class Game implements GameObjectEventListener,ContactListener {
 
         Vec2 mid=new Vec2(m_width/2.0f,m_height/2.0f);
         Vec2 offset=new Vec2(m_width/2*0.75f,0);
-        int np=6;
+        int np=2; //6;
         for(int i=0;i<np;i++){
             //Body b=createRect(0.5f,-1.0f,-1.0f,2.0f,2.0f);
             Body b=createPolygon(1.0f, verts );
@@ -77,7 +77,11 @@ public class Game implements GameObjectEventListener,ContactListener {
             PlayerObject po=new PlayerObject(b,verts,(i==0)?Color.red:Color.blue);
             po.addGameObjectEventListener(this);
             addGameObject(po);
-            if(i==0){ m_player=po; }else{
+            if(i==0){ 
+                m_player=po; 
+                LivePlayer lp=new LivePlayer(m_player);
+                m_gamePlayers.add(lp);
+            }else{
                 HunterPlayer gp=new HunterPlayer(po);
                 m_gamePlayers.add(gp);
             }
@@ -143,6 +147,7 @@ public class Game implements GameObjectEventListener,ContactListener {
     }
 
     // TODO refactor this?
+    // CONSIDER should be LivePlayer not player object?
     public PlayerObject getPlayer(){
         return m_player;
     }
@@ -168,7 +173,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         for(int i=0;i<m_gamePlayers.size();i++){
             m_gamePlayers.get(i).tick();
         }
-        m_world.step(1.0f/60.0f,1);
+        m_world.step(1.0f/40.0f,1);
     }
 
     public void draw( Graphics2D g ){
@@ -206,7 +211,12 @@ public class Game implements GameObjectEventListener,ContactListener {
         b.setUserData(null);
         m_world.destroyBody(b);
         m_gameObjects.remove(go);
-   }
+    }
+
+    public ArrayList<GamePlayer> getPlayers(){
+        return m_gamePlayers;
+    }
+    public ArrayList<GamePlayer> players;
 
     // Contact Listener manages bullet damage
     // TODO remove this from Game to seperate points manager

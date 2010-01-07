@@ -26,7 +26,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         m_game=new Game(m_gameWidth,m_gameHeight);
         Game.game=m_game;
-        m_timer = new Timer(1000/60,this);
+        m_timer = new Timer(1000/40,this);
         m_timer.setInitialDelay(500);
         m_timer.start(); 
         
