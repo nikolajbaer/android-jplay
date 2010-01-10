@@ -43,20 +43,46 @@ public class HunterPlayer extends GamePlayer {
         return t;
     }
 
+    // NOT WORKING
     private float getAngleToTarget(){
         // TODO make this accurate:
         // mediocre reference http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/index.htm 
-        Vec2 tp=m_target.getBody().getPosition();
-        Vec2 d=tp.sub(m_playerObject.getBody().getPosition());
+        Vec2 tp=m_target.getBody().getPosition(); // target positoin
+        Vec2 d=tp.sub(m_playerObject.getBody().getPosition()); // me to target 
         d.normalize();
-        Vec2 lv=Util.rotate(new Vec2(0,-1),m_playerObject.getBody().getAngle());
-        float a=(float)(Math.acos(Vec2.dot(d,lv)));
-        //System.out.println("Target is at "+tp+", I am at "+m_playerObject.getBody().getPosition()+" and the vec to the target is "+d+", and i am pointing in "+lv+" so d (dot) lv is "+Vec2.dot(d,lv));
-        // figure out angle to target 
-        return a;
+        Vec2 lv=Util.rotate(new Vec2(0,-1),m_playerObject.getBody().getAngle()); // my direction vector
+        //float a=(float)(Math.acos(Vec2.dot(d,lv)));
+        return Util.angleTo(d,lv);
+    }
+
+    private float getDirectionOfTarget(){
+        // get current target position and velocity
+        Vec2 tp=m_target.getBody().getPosition(); 
+        Vec2 td=m_target.getBody().getLinearVelocity(); 
+   
+        // find out vector to target 
+        Vec2 d=tp.sub(m_playerObject.getBody().getPosition()); // me to target 
+
+        // and vector of my current angle
+        Vec2 lv=Util.rotate(new Vec2(0,-1),m_playerObject.getBody().getAngle()); // my direction vector
+
+        // anticipate new position 
+        float v=m_playerObject.getWeaponVelocity();
+
+        // lengthen linear velocity by distance from target over velocity of weapon 
+        // to figure out new target position
+        Vec2 np=tp.add(td.mul(d.length()/v));
+
+        // now get me to new target
+        Vec2 d2 = np.sub(m_playerObject.getBody().getPosition());
+
+        // and fire at where they will be
+        return Vec2.cross(d2,lv);
     }
 
     public void tick(){
+        // lets not do anything if we are dead
+        if( !m_playerObject.isAlive() ){ return; }
         switch(m_state){
             case HUNTING:
                 // look for a target
@@ -83,6 +109,9 @@ public class HunterPlayer extends GamePlayer {
             case ATTACKING:
                 // HACK should i bet targeting game object? how do i efficiently know if it is still around?
                 if( m_target.getBody() == null){
+                    m_playerObject.triggerOff();
+                    m_playerObject.stopRotate();
+                    System.out.println("target dead, hunting..");
                     m_state=HUNTING;
                     break; // is this dirty?
                 }
@@ -90,8 +119,9 @@ public class HunterPlayer extends GamePlayer {
                 // is target destroyed? switch to hunting, else
                 // aim at target (left or right to minimize angle)
                 // if angle < min, shoot 
-                float a=getAngleToTarget();
-                System.out.println("Homing: "+a);
+                //float a=getAngleToTarget();
+                //System.out.println("Homing: "+a+", "+getDirectionOfTarget());
+                float a=getDirectionOfTarget();
                 // TODO need to make this focus on visible cross section of tank with velocity prediciton
                 // TODO perhaps add debugging visual overlays? so easier to see what tank is thinking
                 // TODO stop shooting if target is dead

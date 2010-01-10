@@ -204,12 +204,19 @@ public class Game implements GameObjectEventListener,ContactListener {
     */
     private void queueRemoveGameObject(GameObject go){
         m_toRemove.add(go);
+        //System.out.println("queueing remove of "+go);
     }
 
     private void removeGameObject(GameObject go){
-        go.doDestroy();
         Body b=go.getBody();
+        if(b==null){ 
+            System.out.println("Woops, trying to remove an object that has a null body: "+go);
+            return; 
+        }
+        //System.out.println("removing "+go+" with body "+b);
         b.setUserData(null);
+        // make sure to set userdata null before do destroy
+        go.doDestroy();
         go.removeBody();
         m_world.destroyBody(b);
         m_gameObjects.remove(go);

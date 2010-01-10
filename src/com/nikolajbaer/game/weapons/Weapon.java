@@ -21,5 +21,7 @@ public abstract class Weapon {
     // CONSIDER should this be a player object? what about a stationary cannon?
     public abstract void tick(PlayerObject parent);
 
+    // the muzzle speed of projectiles for estimation of AI, -1 for not being relevant
+    public abstract float getVelocity();
 }
     

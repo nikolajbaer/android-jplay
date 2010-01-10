@@ -105,6 +105,7 @@ public abstract class GameObject {
     }
 
     public void removeBody(){
+        //System.out.println("I am removing body" + this);
         m_body=null;
     }
     

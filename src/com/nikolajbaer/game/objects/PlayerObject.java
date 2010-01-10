@@ -43,6 +43,7 @@ public class PlayerObject extends PolygonGameObject {
     // e.g. shields down, hull level critical, cannon reloading stalled
 
     public void left(){
+        if(m_body==null){ return; }
         //m_body.setAngularVelocity(-1.0f);
         if(m_body.getAngularVelocity() > -MAX_ANG_VEL){
             m_body.applyTorque(-120.0f);
@@ -50,6 +51,7 @@ public class PlayerObject extends PolygonGameObject {
     }
     
     public void right(){
+        if(m_body==null){ return; }
         //m_body.setAngularVelocity(1.0f);
         if(m_body.getAngularVelocity() < MAX_ANG_VEL){
             m_body.applyTorque(120.0f);
@@ -57,10 +59,12 @@ public class PlayerObject extends PolygonGameObject {
     }
 
     public void stopRotate(){
+        if(m_body==null){ return; }
         m_body.setAngularVelocity(0.0f);
     }
 
     public void thrust(float m){
+        if(m_body==null){ return; }
         if(m==0){ return; }
         Vec2 lv=m_body.getLinearVelocity();
         if(Math.abs(lv.length()) < MAX_LIN_VEL){
@@ -173,6 +177,10 @@ public class PlayerObject extends PolygonGameObject {
     // perhapsthey should target a player rather than a gameobject?
     public boolean isAlive(){
         return !m_isDead;
+    }
+
+    public float getWeaponVelocity(){
+        return m_currentWeapon.getVelocity(); 
     }
 }
 

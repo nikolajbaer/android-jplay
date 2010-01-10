@@ -12,6 +12,7 @@ import com.nikolajbaer.game.objects.*;
 public class TankCannon extends Weapon {
     private boolean m_shooting;
     private int m_reloadCount;
+    private static float m_bulletVelocity = 10.0f;
 
     public TankCannon(){
         m_shooting=false;
@@ -37,7 +38,7 @@ public class TankCannon extends Weapon {
                 BulletObject bo=new BulletObject(b,50);
                 b.setXForm(shooter.getBody().getWorldCenter().add(d.mul(4)),shooter.getBody().getAngle());
                 b.setBullet(true);
-                b.setLinearVelocity(d.mul(10).add(shooter.getBody().getLinearVelocity()));
+                b.setLinearVelocity(d.mul(m_bulletVelocity).add(shooter.getBody().getLinearVelocity()));
                 // TODO drain energy usage from game object if this is a beam weapon
                 shooter.emitGameObject(bo); 
                 m_reloadCount=0;
@@ -53,4 +54,5 @@ public class TankCannon extends Weapon {
 
     public String getName(){ return "Tank Cannon"; }
 
+    public float getVelocity(){ return m_bulletVelocity; }
 }
