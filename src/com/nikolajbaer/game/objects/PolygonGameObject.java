@@ -28,7 +28,7 @@ public class PolygonGameObject extends GameObject {
     }
 
     public void draw( Graphics2D g ){ 
-        g.setColor(Color.black);
+        g.setColor(Color.gray);
         Vec2 p=Game.toScreen(m_body.getPosition());
         g.translate(p.x,p.y);
         g.rotate(m_body.getAngle());

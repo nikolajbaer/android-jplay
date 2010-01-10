@@ -30,6 +30,7 @@ public class Game implements GameObjectEventListener,ContactListener {
     private ArrayList<GameObject> m_gameObjects;
     private ArrayList<GameObject> m_toRemove;
     private ArrayList<GamePlayer> m_gamePlayers;
+    private ArrayList<GameObject> m_gameObstacles;
     private PlayerObject m_player;
 
     public static final float PPM = 10.0f;
@@ -68,6 +69,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         m_gameObjects=new ArrayList<GameObject>();
         m_toRemove=new ArrayList<GameObject>();
         m_gamePlayers=new ArrayList<GamePlayer>();
+        m_gameObstacles=new ArrayList<GameObject>();
 
         // for now generate game tanks
         float[] verts={-1.0f,1.0f, 0.0f,-2.0f,1.0f,1.0f};
@@ -94,6 +96,23 @@ public class Game implements GameObjectEventListener,ContactListener {
                 HunterPlayer gp=new HunterPlayer(po);
                 m_gamePlayers.add(gp);
             }
+        }
+
+        // TODO add obstacle grid
+        // and randomly choose a couple squares to fill in
+        // and create polygon rects on those   
+        // TODO add A* path finding to AI
+        int nobst=5;
+        for(int i=0;i<nobst;i++){
+            float x=0.0f;
+            float y=i*3.0f;
+            float w=5.0f;
+            float h=1.0f;
+            float[] overts={x,y, x,y+h, x+w,y+h, x+w,y };
+            Body b=createRect(0.0f,x,y,w,h);
+            PolygonGameObject pog=new PolygonGameObject(b,overts);
+            m_gameObstacles.add(pog);
+            m_gameObjects.add(pog);
         }
     }
 
