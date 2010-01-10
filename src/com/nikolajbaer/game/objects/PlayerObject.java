@@ -14,6 +14,7 @@ import java.awt.*;
 /* local */
 import com.nikolajbaer.game.Game;
 import com.nikolajbaer.game.weapons.*;
+import com.nikolajbaer.Util;
 
 public class PlayerObject extends PolygonGameObject {
     protected Color m_color;
@@ -27,6 +28,7 @@ public class PlayerObject extends PolygonGameObject {
     protected static final int SHIELD_RECHARGE_RATE = 1;
 
     protected Weapon m_currentWeapon; // TODO make it have weapon ports
+    protected static boolean m_isDead=true;
     
     public PlayerObject(Body b,float[] vertices,Color c){
         super(b,vertices);
@@ -142,11 +144,11 @@ public class PlayerObject extends PolygonGameObject {
         for(int i=0;i<n;i++){
             Body b=Game.game.createCircle(0.5f,0.2f);
             ShrapnelObject so=new ShrapnelObject(b,m_color,4);
-            b.setXForm(m_body.getWorldCenter().add(GameObject.rotate(new Vec2(2,0),i*astep)),0);
-            b.setLinearVelocity(GameObject.rotate(new Vec2(10,0),i*astep));
+            b.setXForm(m_body.getWorldCenter().add(Util.rotate(new Vec2(2,0),i*astep)),0);
+            b.setLinearVelocity(Util.rotate(new Vec2(10,0),i*astep));
             emitGameObject(so);
         }  
-       
+        m_isDead=true; 
     }
 
     public int getEnergy(){ return m_energy; } 
@@ -161,8 +163,16 @@ public class PlayerObject extends PolygonGameObject {
         if(l<0){ 
             m_energy=0;
             return e+l;
+        }else{
+            m_energy=l;
         }
         return l;
+    }
+
+    // TODO need to figure out efficiently is a player is still in the game in the AI
+    // perhapsthey should target a player rather than a gameobject?
+    public boolean isAlive(){
+        return !m_isDead;
     }
 }
 

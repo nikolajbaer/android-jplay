@@ -15,7 +15,7 @@ import java.awt.geom.*;
 
 /* local */
 import com.nikolajbaer.game.Game;
-
+import com.nikolajbaer.Util;
 
 // CONSIDER maybe this should be an interface?
 public abstract class GameObject {
@@ -36,13 +36,9 @@ public abstract class GameObject {
 
     // TODO make this more accessible
     // CONSDIER stupid that this isn't in Vec2
-    public static Vec2 rotate(Vec2 v,float a){
-        return new Vec2((float)(v.x * Math.cos(a) - v.y * Math.sin(a)),
-                       (float)(v.x * Math.sin(a) + v.y * Math.cos(a)));
-    }
 
     public Vec2 getDir(){
-        return rotate(new Vec2(0,-1),m_body.getAngle());
+        return Util.rotate(new Vec2(0,-1),m_body.getAngle());
     }
 
     /* tick
@@ -107,6 +103,11 @@ public abstract class GameObject {
     public void emitGameObject(GameObject go){
         dispatchGameObjectCreatedEvent(new GameObjectEvent(this,go)); 
     }
+
+    public void removeBody(){
+        m_body=null;
+    }
+    
 }
 
 

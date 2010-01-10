@@ -19,6 +19,7 @@ import java.awt.geom.*;
 
 /* local */
 import com.nikolajbaer.game.objects.*;
+import com.nikolajbaer.Util;
 
 // CONSIDER phsyics should be refactored into its own engine
 public class Game implements GameObjectEventListener,ContactListener {
@@ -71,7 +72,7 @@ public class Game implements GameObjectEventListener,ContactListener {
             Body b=createPolygon(1.0f, verts );
 
             double a=(2*Math.PI)/np;
-            Vec2 rv=GameObject.rotate( offset, (float)(i*a) );
+            Vec2 rv=Util.rotate( offset, (float)(i*a) );
             float ra=(float)(i*a < Math.PI ? i*a+Math.PI : i*a-Math.PI);
             b.setXForm( mid.add(rv) ,(float)(ra+Math.PI/2)); // i guess it goes from 0,1 not 1,0
             PlayerObject po=new PlayerObject(b,verts,(i==0)?Color.red:Color.blue);
@@ -209,6 +210,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         go.doDestroy();
         Body b=go.getBody();
         b.setUserData(null);
+        go.removeBody();
         m_world.destroyBody(b);
         m_gameObjects.remove(go);
     }

@@ -10,7 +10,7 @@ import org.jbox2d.common.Vec2;
 
 /* local */
 import com.nikolajbaer.game.objects.*;
-
+import com.nikolajbaer.Util;
 
 public class HunterPlayer extends GamePlayer {
     private static final int HUNTING = 0;
@@ -31,7 +31,8 @@ public class HunterPlayer extends GamePlayer {
         for(int i=0;i<pos.size();i++){
             GamePlayer po=pos.get(i);
             GameObject go=po.getGameObject();
-            if(po != this){
+            // CONSIDER more explicitely stating a playre is out than checking for a null body
+            if(po != this && go.getBody() != null){
                 float d=go.getBody().getPosition().sub(m_playerObject.getBody().getPosition()).length();
                 if(d<min){
                     min=d;
@@ -48,7 +49,7 @@ public class HunterPlayer extends GamePlayer {
         Vec2 tp=m_target.getBody().getPosition();
         Vec2 d=tp.sub(m_playerObject.getBody().getPosition());
         d.normalize();
-        Vec2 lv=GameObject.rotate(new Vec2(0,-1),m_playerObject.getBody().getAngle());
+        Vec2 lv=Util.rotate(new Vec2(0,-1),m_playerObject.getBody().getAngle());
         float a=(float)(Math.acos(Vec2.dot(d,lv)));
         //System.out.println("Target is at "+tp+", I am at "+m_playerObject.getBody().getPosition()+" and the vec to the target is "+d+", and i am pointing in "+lv+" so d (dot) lv is "+Vec2.dot(d,lv));
         // figure out angle to target 
@@ -71,15 +72,21 @@ public class HunterPlayer extends GamePlayer {
                     // otherwise go forward
                     m_playerObject.forward();
                     double r=Math.random();
-                    if( r < 0.25){ 
+                    if( r < -0.05){ 
                         m_playerObject.left();
-                    }else if(r > 0.75){
+                    }else if(r > 0.05){
                          m_playerObject.right();
                     }else{ /* go straight */ }
                 }
                 // else move forward and randomly left or right
                 break;
             case ATTACKING:
+                // HACK should i bet targeting game object? how do i efficiently know if it is still around?
+                if( m_target.getBody() == null){
+                    m_state=HUNTING;
+                    break; // is this dirty?
+                }
+
                 // is target destroyed? switch to hunting, else
                 // aim at target (left or right to minimize angle)
                 // if angle < min, shoot 
@@ -87,10 +94,11 @@ public class HunterPlayer extends GamePlayer {
                 System.out.println("Homing: "+a);
                 // TODO need to make this focus on visible cross section of tank with velocity prediciton
                 // TODO perhaps add debugging visual overlays? so easier to see what tank is thinking
-                if(a>0.2){ 
+                // TODO stop shooting if target is dead
+                if(a > 0.05){ 
                     m_playerObject.triggerOff();
                     m_playerObject.left(); 
-                }else if(a<-0.2){ 
+                }else if(a < -0.05){ 
                     m_playerObject.triggerOff();
                     m_playerObject.right(); 
                 }else{
