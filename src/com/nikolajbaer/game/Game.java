@@ -37,10 +37,18 @@ public class Game implements GameObjectEventListener,ContactListener {
     // CONSIDER currently the simplest way to manage physics world interrelationships (see PlayerObect GO create)
     public static Game game=null; // singleton
 
+    // HACK keep canvas width/height to draw HUD
+    // TODO detach display of game from game itself
+    private int m_canvasWidth;
+    private int m_canvasHeight;
+
     public Game(int width,int height){
         // set world width/height
         m_width=1/PPM * width;
         m_height=1/PPM * height;
+
+        m_canvasWidth=width;
+        m_canvasHeight=height;
 
         // make world 2 times wider and higher
 		Vec2 minWorldAABB = new Vec2(-m_width,-m_height);
@@ -178,10 +186,33 @@ public class Game implements GameObjectEventListener,ContactListener {
     }
 
     public void draw( Graphics2D g ){
+        /* draw game objects */
         AffineTransform t=g.getTransform();
         for(int i=0;i<m_gameObjects.size();i++){
             m_gameObjects.get(i).draw(g);
             g.setTransform(new AffineTransform(t));
+        }
+    
+        /* draw HUD */
+        // TODO make a detached rendering engine. 
+        // HACK hardcoding width here for the moment to render hud
+        int np=m_gamePlayers.size();
+        int msz=(int)(m_canvasWidth/np-10);
+        for(int i=0;i<np; i++){
+            // CONSIDER assumes player object
+            PlayerObject p=(PlayerObject)m_gamePlayers.get(i).getGameObject();
+            g.setColor(p.getColor());
+            int bx=i*(msz+10)+5;
+            // energy 
+            g.drawRect(bx,m_canvasHeight-35,msz,5);
+            g.fillRect(bx,m_canvasHeight-35,(int)(msz*p.getEnergyRatio()),5);
+            // shields
+            g.drawRect(bx,m_canvasHeight-28,msz,5);
+            g.fillRect(bx,m_canvasHeight-28,(int)(msz*p.getShieldsRatio()),5);
+            // hull 
+            g.drawRect(bx,m_canvasHeight-21,msz,5);
+            g.fillRect(bx,m_canvasHeight-21,(int)(msz*p.getHullRatio()),5);
+
         }
     }
 

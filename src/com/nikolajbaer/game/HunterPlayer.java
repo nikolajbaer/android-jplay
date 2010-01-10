@@ -19,6 +19,9 @@ public class HunterPlayer extends GamePlayer {
     private int m_state;
     private GameObject m_target;
 
+    private Vec2 m_targetVector;
+    private Vec2 m_targetProjectedPosition;
+
     public HunterPlayer(PlayerObject go){
         super(go);
         m_state=HUNTING;
@@ -72,9 +75,11 @@ public class HunterPlayer extends GamePlayer {
         // lengthen linear velocity by distance from target over velocity of weapon 
         // to figure out new target position
         Vec2 np=tp.add(td.mul(d.length()/v));
+        m_targetProjectedPosition=np;
 
         // now get me to new target
         Vec2 d2 = np.sub(m_playerObject.getBody().getPosition());
+        m_targetVector=d2;
 
         // and fire at where they will be
         return Vec2.cross(d2,lv);
@@ -125,15 +130,22 @@ public class HunterPlayer extends GamePlayer {
                 // TODO need to make this focus on visible cross section of tank with velocity prediciton
                 // TODO perhaps add debugging visual overlays? so easier to see what tank is thinking
                 // TODO stop shooting if target is dead
-                if(a > 0.05){ 
+                if(a > 0.1){ 
                     m_playerObject.triggerOff();
                     m_playerObject.left(); 
-                }else if(a < -0.05){ 
+                }else if(a < -0.1){ 
                     m_playerObject.triggerOff();
                     m_playerObject.right(); 
                 }else{
                     m_playerObject.stopRotate();
                     m_playerObject.triggerOn();
+                    if(m_targetVector.length()>20){
+                        m_playerObject.forward();
+                    }else if(m_targetVector.length() < 5){
+                        m_playerObject.reverse();
+                    }else{
+                        m_playerObject.halt();
+                    }
                 }
                 break;
         }

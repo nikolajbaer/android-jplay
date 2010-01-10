@@ -18,17 +18,17 @@ import com.nikolajbaer.Util;
 
 public class PlayerObject extends PolygonGameObject {
     protected Color m_color;
-    protected int m_hull; // TODO make it shields + hull
-    protected int m_shields;
-    protected int m_energy;
-    protected static final int SHIELD_MAX = 100;
-    protected static final int HULL_MAX = 100;
-    protected static final int ENERGY_MAX = 100;
-    protected static final int ENERGY_RECHARGE_RATE = 1;
-    protected static final int SHIELD_RECHARGE_RATE = 1;
+    protected float m_hull; // TODO make it shields + hull
+    protected float m_shields;
+    protected float m_energy;
+    protected static final float SHIELD_MAX = 100;
+    protected static final float HULL_MAX = 100;
+    protected static final float ENERGY_MAX = 100;
+    protected static final float ENERGY_RECHARGE_RATE = 1;
+    protected static final float SHIELD_RECHARGE_RATE = 0.1f;
 
     protected Weapon m_currentWeapon; // TODO make it have weapon ports
-    protected static boolean m_isDead=true;
+    protected static boolean m_isDead=false;
     
     public PlayerObject(Body b,float[] vertices,Color c){
         super(b,vertices);
@@ -63,7 +63,7 @@ public class PlayerObject extends PolygonGameObject {
         m_body.setAngularVelocity(0.0f);
     }
 
-    public void thrust(float m){
+    private void thrust(float m){
         if(m_body==null){ return; }
         if(m==0){ return; }
         Vec2 lv=m_body.getLinearVelocity();
@@ -133,7 +133,7 @@ public class PlayerObject extends PolygonGameObject {
         m_shields -= d;
         if(m_shields < 0){
             //System.out.println("applying damage to hull!");
-            int d2=-1*m_shields;
+            float d2=-1*m_shields;
             m_hull -= d2;
             if(m_hull < 0){
                 return false;
@@ -155,15 +155,21 @@ public class PlayerObject extends PolygonGameObject {
         m_isDead=true; 
     }
 
-    public int getEnergy(){ return m_energy; } 
+    public float getEnergyRatio(){ return (float)m_energy/ENERGY_MAX; } 
 
-    public int getHull(){ return m_hull; }
+    public float getHullRatio(){ return (float)m_hull/HULL_MAX; }
 
-    public int getShields(){ return m_shields; }
+    public float getShieldsRatio(){ return (float)m_shields/SHIELD_MAX; }
+
+    public float getEnergy(){ return m_energy; } 
+
+    public float getHull(){ return m_hull; }
+
+    public float getShields(){ return m_shields; }
 
     /* Draws energy from ship. Return the amount drawn (may be less than requested) */
-    public int drawEnergy(int e){
-        int l=m_energy-e;
+    public float drawEnergy(int e){
+        float l=m_energy-e;
         if(l<0){ 
             m_energy=0;
             return e+l;
@@ -181,6 +187,10 @@ public class PlayerObject extends PolygonGameObject {
 
     public float getWeaponVelocity(){
         return m_currentWeapon.getVelocity(); 
+    }
+
+    public Color getColor(){
+        return m_color;
     }
 }
 

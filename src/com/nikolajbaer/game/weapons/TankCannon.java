@@ -31,11 +31,11 @@ public class TankCannon extends Weapon {
         //System.out.println("ticking");
         if(m_shooting && m_reloadCount%10 == 0 ){
             if(shooter.getEnergy() > 10){
-                shooter.drawEnergy(50);
+                shooter.drawEnergy(20);
                 // TODO make it so the shooter can't get hit by their own bullets?
                 Vec2 d=shooter.getDir();
                 Body b=Game.game.createCircle(1.0f,0.3f);
-                BulletObject bo=new BulletObject(b,50);
+                BulletObject bo=new BulletObject(b,10);
                 b.setXForm(shooter.getBody().getWorldCenter().add(d.mul(4)),shooter.getBody().getAngle());
                 b.setBullet(true);
                 b.setLinearVelocity(d.mul(m_bulletVelocity).add(shooter.getBody().getLinearVelocity()));
