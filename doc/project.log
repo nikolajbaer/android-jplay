@@ -8,4 +8,7 @@ Added hull/shields with a recharge rate. I need to put some visuals in there to 
 
 Meanwhile, watching the movie "Avatar" and realizing how much James Cameron pulled from so many existing movies/novels/video games, I realized that maybe I shouldn't feel so bad. This game is right now heavily inspired by D-Zone, but Julian Cochran (www.digitalscores.com/dzone), and I feel compelled to make it significantly different because I hate such uninspired copycatting, but the more I think about it rationally, the more I notice how much of gaming is that formulaic. Interesting quandary.
 
+1/9/2010
+I have added predictive shooting to my simple Hunter AI. This suddenly makes the game interesting. The next step is to make the AI actually follow me, then maybe dodge. Also, I am going to start to need a HUD so i can keep tabs on health/power of all the various units. 
 
+Ultimately, I am going to try to get this thing barebones playable in swing, then try to port it to android so I can feel confident in my full development platform. Then I can tighten up the game in the swing library, and periodically switch to android to make things pretty and tweak input.
