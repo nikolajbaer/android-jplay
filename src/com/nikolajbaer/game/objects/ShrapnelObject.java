@@ -12,20 +12,24 @@ import com.nikolajbaer.game.Game;
 
 public class ShrapnelObject extends PolygonGameObject {
     private Color m_color;
-    private int impacts;
+    private int m_impacts;
+    private int m_life;
     private int m_size;
 
     public ShrapnelObject(Body b,Color c,int size){
         super(b,new float[]{-1,-1,0,1,1,-1});
         m_color=c;
-        impacts=0;
+        m_impacts=0;
         m_size=size;
+        m_life=30;
     }
 
     public boolean survivesImpact(){
-        impacts++;
-        return impacts <= 0; // die on first impact (otherwise would be nice to die off after a time..
+        // fade out after first impact
+        m_impacts++;
+        return m_impacts<=2;
     }
+
 
     public boolean doesDamage(){
         return false;
@@ -35,8 +39,18 @@ public class ShrapnelObject extends PolygonGameObject {
         g.setColor(m_color);
         Vec2 p=Game.toScreen(m_body.getPosition());
         g.translate(p.x,p.y);
-        g.fillOval(0,0,m_size,m_size);
+        int s=(int)(m_size*(m_life/30.0f));
+        g.fillOval(0,0,s,s);
+        //g.fillOval(0,0,m_size,m_size);
+
     }
 
+    public boolean tick(){ 
+        if(m_impacts>=1){
+            m_life--; 
+            return m_life>0;
+        }
+        return true;
+    }
 
 }

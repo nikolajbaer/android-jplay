@@ -32,6 +32,7 @@ public class Game implements GameObjectEventListener,ContactListener {
     private ArrayList<GamePlayer> m_gamePlayers;
     private ArrayList<GameObject> m_gameObstacles;
     private PlayerObject m_player;
+    private boolean[][] m_obstacleGrid;
 
     public static final float PPM = 10.0f;
 
@@ -102,6 +103,31 @@ public class Game implements GameObjectEventListener,ContactListener {
         // and randomly choose a couple squares to fill in
         // and create polygon rects on those   
         // TODO add A* path finding to AI
+        int OBS_GRIDWIDTH=20;
+        int OBS_GRIDHEIGHT=40;
+        float sqw=(m_width/(float)OBS_GRIDWIDTH);
+        float sqh=(m_height/(float)OBS_GRIDHEIGHT);
+        m_obstacleGrid=new boolean[OBS_GRIDWIDTH][OBS_GRIDHEIGHT];
+        for(int i=0;i<OBS_GRIDWIDTH;i++){
+            for(int j=0;j<OBS_GRIDHEIGHT;j++){
+                // TODO more efficient to not do rand every iteration..
+                if(Math.random()>0.98){
+                    m_obstacleGrid[i][j]=true;
+                    float x=i*sqw;
+                    float y=j*sqh;
+                    float w=sqw;
+                    float h=sqh;
+                    float[] overts={x,y, x,y+h, x+w,y+h, x+w,y };
+                    Body b=createRect(0.0f,x,y,w,h);
+                    PolygonGameObject pog=new PolygonGameObject(b,overts);
+                    m_gameObstacles.add(pog);
+                    m_gameObjects.add(pog);
+                }else{
+                    m_obstacleGrid[i][j]=false;
+                }
+            }
+        }
+        /*
         int nobst=5;
         for(int i=0;i<nobst;i++){
             float x=0.0f;
@@ -114,6 +140,7 @@ public class Game implements GameObjectEventListener,ContactListener {
             m_gameObstacles.add(pog);
             m_gameObjects.add(pog);
         }
+        */
     }
 
     public Body createCircle(float density, float radius){
