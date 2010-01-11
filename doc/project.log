@@ -12,3 +12,10 @@ Meanwhile, watching the movie "Avatar" and realizing how much James Cameron pull
 I have added predictive shooting to my simple Hunter AI. This suddenly makes the game interesting. The next step is to make the AI actually follow me, then maybe dodge. Also, I am going to start to need a HUD so i can keep tabs on health/power of all the various units. 
 
 Ultimately, I am going to try to get this thing barebones playable in swing, then try to port it to android so I can feel confident in my full development platform. Then I can tighten up the game in the swing library, and periodically switch to android to make things pretty and tweak input.
+
+1/10/2010
+So now the challenge is that with prediction and aggressive maneuvering, my AI is a bit too good, given that I have no other weapons to fight it aside from my dull cannon. I added random obstacles, as this might give me some advantage, but this means I should also add some AI path finding, such as A*. On a broader note, this is starting to feel like a game, albeit without much variation or scoring.
+
+One thing I keep running into is the high number of back-references I need to do. For instance, efficient event passing, or determination of who shot what at whom, and so on, requires references to and from the various game objects. Given java's garbage collection scheme, I think this means I am prone to alot of memory leaks. I will need to keep a close eye on this.
+
+The next big challenges I want to overcome is to add multiple weapons and ports for weapons, add nicer obstacles, and start to think about how to detach the display code from the game code so that my porting to Android will be easier. All in all, though, this is a fun project. Another note, though, is that the tank movement still seems a bit clunky, as it is a hybrid of actual physics motions, and shoe-horned direct changes to constants like linear and angular velocity. This will require more tweaking.
