@@ -37,6 +37,7 @@ public class PlayerObject extends PolygonGameObject {
         m_shields=SHIELD_MAX;
         m_energy=ENERGY_MAX;
         m_currentWeapon=new TankCannon();
+        //m_currentWeapon=new Blaster();
     }
 
     // TODO add alert system to warn player with issues in their tank
