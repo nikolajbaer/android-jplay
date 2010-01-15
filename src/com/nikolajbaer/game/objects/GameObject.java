@@ -10,16 +10,19 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.common.Vec2;
 
 /* AWT */
-import java.awt.*;
-import java.awt.geom.*;
+//import java.awt.*;
+//import java.awt.geom.*;
 
 /* local */
 import com.nikolajbaer.game.Game;
 import com.nikolajbaer.Util;
+import com.nikolajbaer.render.Renderable;
+import com.nikolajbaer.render.RenderObject;
 
 // CONSIDER maybe this should be an interface?
-public abstract class GameObject {
+public abstract class GameObject implements Renderable {
     protected Body m_body;
+    protected RenderObject m_renderObject;
     protected float thruster;
     protected static float MAX_LIN_VEL=10.0f;
     protected static float MAX_ANG_VEL=1.0f;
@@ -49,7 +52,7 @@ public abstract class GameObject {
 
     // TODO this should be abstracted into a GameObjectDisplay class
     // so i can make game code separate from display code to port to Android
-    public abstract void draw( Graphics2D g );
+    //public abstract void draw( Graphics2D g );
     // do nothing
 
     // TODO shouldn't this kind of framework already be pre-packaged?
@@ -107,6 +110,27 @@ public abstract class GameObject {
     public void removeBody(){
         //System.out.println("I am removing body" + this);
         m_body=null;
+    }
+
+    public float[] getWorldTransform(){
+        Vec2 p=m_body.getPosition();
+        float[] v={p.x,p.y,m_body.getAngle()};
+        return v;
+    }
+
+    public String getRenderKey(){ return "default"; }
+
+
+    public RenderObject getRenderObject(){
+        return m_renderObject;
+    }
+
+    public void setRenderObject(RenderObject ro){
+        m_renderObject=ro;
+    }
+
+    public void clearRenderObject(){
+         m_renderObject=null;
     }
     
 }

@@ -1,7 +1,7 @@
 package com.nikolajbaer.game.objects;
 
 /* java */
-import java.awt.*;
+//import java.awt.*;
 
 /* jbox2d */
 import org.jbox2d.dynamics.Body; 
@@ -18,6 +18,7 @@ public class BulletObject extends GameObject {
         this.m_damage=damage;
     }
 
+    /*
     public void draw( Graphics2D g ){
         g.setColor(Color.white);
         Vec2 p=Game.toScreen(m_body.getPosition());
@@ -29,6 +30,7 @@ public class BulletObject extends GameObject {
         int w=(int)(0.5*Game.PPM);
         g.fillOval(0,0,w,w);
     }
+    */
 
     public boolean survivesImpact(){
         return false;
@@ -37,4 +39,7 @@ public class BulletObject extends GameObject {
     public boolean doesDamage(){
         return true;
     }
+
+    public String getRenderKey(){ return "bullet"; }
+
 }

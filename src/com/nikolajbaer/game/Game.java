@@ -14,12 +14,13 @@ import org.jbox2d.dynamics.*;
 import org.jbox2d.dynamics.contacts.*;
 
 /* AWT Specific */
-import java.awt.*;
-import java.awt.geom.*;
+//import java.awt.*;
+//import java.awt.geom.*;
 
 /* local */
 import com.nikolajbaer.game.objects.*;
 import com.nikolajbaer.Util;
+import com.nikolajbaer.render.Renderable;
 
 // CONSIDER phsyics should be refactored into its own engine
 public class Game implements GameObjectEventListener,ContactListener {
@@ -27,7 +28,9 @@ public class Game implements GameObjectEventListener,ContactListener {
     private float m_width;
     private float m_height;
     private Body[] m_boundingBox;
+    // CONSIDER should i be keeping the same object in multiple lists?
     private ArrayList<GameObject> m_gameObjects;
+    private ArrayList<Renderable> m_renderables;
     private ArrayList<GameObject> m_toRemove;
     private ArrayList<GamePlayer> m_gamePlayers;
     private ArrayList<GameObject> m_gameObstacles;
@@ -86,7 +89,7 @@ public class Game implements GameObjectEventListener,ContactListener {
             Vec2 rv=Util.rotate( offset, (float)(i*a) );
             float ra=(float)(i*a < Math.PI ? i*a+Math.PI : i*a-Math.PI);
             b.setXForm( mid.add(rv) ,(float)(ra+Math.PI/2)); // i guess it goes from 0,1 not 1,0
-            PlayerObject po=new PlayerObject(b,verts,(i==0)?Color.red:Color.blue);
+            PlayerObject po=new PlayerObject(b,verts);
             po.addGameObjectEventListener(this);
             addGameObject(po);
             if(i==0){ 
@@ -121,7 +124,8 @@ public class Game implements GameObjectEventListener,ContactListener {
                     Body b=createRect(0.0f,x,y,w,h);
                     PolygonGameObject pog=new PolygonGameObject(b,overts);
                     m_gameObstacles.add(pog);
-                    m_gameObjects.add(pog);
+                    //m_gameObjects.add(pog);
+                    addGameObject(pog);
                 }else{
                     m_obstacleGrid[i][j]=false;
                 }
@@ -231,15 +235,16 @@ public class Game implements GameObjectEventListener,ContactListener {
         m_world.step(1.0f/40.0f,1);
     }
 
+    /*
     public void draw( Graphics2D g ){
-        /* draw game objects */
+        // draw game objects 
         AffineTransform t=g.getTransform();
         for(int i=0;i<m_gameObjects.size();i++){
             m_gameObjects.get(i).draw(g);
             g.setTransform(new AffineTransform(t));
         }
     
-        /* draw HUD */
+        // draw HUD 
         // TODO make a detached rendering engine. 
         // HACK hardcoding width here for the moment to render hud
         int np=m_gamePlayers.size();
@@ -247,7 +252,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         for(int i=0;i<np; i++){
             // CONSIDER assumes player object
             PlayerObject p=(PlayerObject)m_gamePlayers.get(i).getGameObject();
-            g.setColor(p.getColor());
+            //g.setColor(p.getColor());
             int bx=i*(msz+10)+5;
             // energy 
             g.drawRect(bx,m_canvasHeight-35,msz,5);
@@ -261,6 +266,7 @@ public class Game implements GameObjectEventListener,ContactListener {
 
         }
     }
+    */
 
     public void gameObjectCreated(GameObjectEvent e){
         addGameObject(e.getCreated());
@@ -269,6 +275,7 @@ public class Game implements GameObjectEventListener,ContactListener {
     public void addGameObject(GameObject go){
         go.getBody().setUserData(go); // HACK
         m_gameObjects.add(go);
+        m_renderables.add(go);
     }
 
     public void gameObjectDestroyed(GameObjectEvent e){ 
@@ -297,6 +304,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         go.removeBody();
         m_world.destroyBody(b);
         m_gameObjects.remove(go);
+        m_renderables.remove(go);
     }
 
     public ArrayList<GamePlayer> getPlayers(){
@@ -315,7 +323,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         GameObject g1=(GameObject)b1.getUserData();
         GameObject g2=(GameObject)b2.getUserData();
 
-        /* apply damage and remove objects if needed */       
+        // apply damage and remove objects if needed
         boolean removeg1=false;
         boolean removeg2=false; 
         if(g1 != null && g2 != null){
@@ -345,5 +353,9 @@ public class Game implements GameObjectEventListener,ContactListener {
     public void remove(ContactPoint p){
     } 
     public void result(ContactResult p){
+    }
+
+    public ArrayList<Renderable> getRenderables(){
+        return m_renderables;
     }
 }

@@ -1,5 +1,8 @@
 package com.nikolajbaer.engine;
 
+/* java */
+import java.util.ArrayList;
+
 /* AWT */
 import java.awt.*;
 import java.awt.event.*;
@@ -9,6 +12,7 @@ import java.awt.event.KeyEvent;
 
 /* local */
 import com.nikolajbaer.game.Game;
+import com.nikolajbaer.render.Renderable;
 
 public class JPlay extends JFrame implements ActionListener { //implements Runnable{
     private Game m_game;
@@ -88,7 +92,16 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_backGraphics.setColor( Color.black ) ;
         m_backGraphics.fillRect( 0,0, m_gameWidth,m_gameHeight) ;
         // render game field
-        m_game.draw(m_backGraphics);
+        //m_game.draw(m_backGraphics);
+        ArrayList<Renderable> renderables=m_game.getRenderables();
+        for(int i=0;i<renderables.size(); i++){
+            Renderable r=renderables.get(i);
+            String k=r.getRenderKey(); 
+            float[] t=r.getWorldTransform();
+            // TODO draw sprite k at location t
+            // CONSIDER sprite lookup is expensive, should embed it in renderable as renderobject
+            //  and call .renderAtTransform(), maybe setup graphics first or something..
+        }
         
         Graphics g = getGraphics();
         g.drawImage( m_backBuffer, 5,25, null );

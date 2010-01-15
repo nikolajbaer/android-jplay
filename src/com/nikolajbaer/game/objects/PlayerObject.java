@@ -8,8 +8,8 @@ import org.jbox2d.dynamics.Body; import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.common.Vec2;
 
 /* AWT */
-import java.awt.geom.*;
-import java.awt.*;
+//import java.awt.geom.*;
+//import java.awt.*;
 
 /* local */
 import com.nikolajbaer.game.Game;
@@ -17,7 +17,7 @@ import com.nikolajbaer.game.weapons.*;
 import com.nikolajbaer.Util;
 
 public class PlayerObject extends PolygonGameObject {
-    protected Color m_color;
+    //protected Color m_color;
     protected float m_hull; // TODO make it shields + hull
     protected float m_shields;
     protected float m_energy;
@@ -30,9 +30,9 @@ public class PlayerObject extends PolygonGameObject {
     protected Weapon m_currentWeapon; // TODO make it have weapon ports
     protected static boolean m_isDead=false;
     
-    public PlayerObject(Body b,float[] vertices,Color c){
+    public PlayerObject(Body b,float[] vertices){
         super(b,vertices);
-        m_color=c; 
+        //m_color=c; 
         m_hull=HULL_MAX;
         m_shields=SHIELD_MAX;
         m_energy=ENERGY_MAX;
@@ -95,6 +95,7 @@ public class PlayerObject extends PolygonGameObject {
         thruster=-12.0f;
     }
 
+    /*
     public void draw( Graphics2D g ){
         Stroke orig_s=g.getStroke();
         g.setStroke(new BasicStroke(2.0f)); 
@@ -106,6 +107,7 @@ public class PlayerObject extends PolygonGameObject {
         g.drawPolygon(x_pts,y_pts,x_pts.length);
         g.setStroke(orig_s);
     }
+    */
 
     public boolean tick(){
         // recharge energy and shields
@@ -148,7 +150,7 @@ public class PlayerObject extends PolygonGameObject {
         float astep=(float)(2*Math.PI)/n;
         for(int i=0;i<n;i++){
             Body b=Game.game.createCircle(0.5f,0.2f);
-            ShrapnelObject so=new ShrapnelObject(b,m_color,4);
+            ShrapnelObject so=new ShrapnelObject(b,4);
             b.setXForm(m_body.getWorldCenter().add(Util.rotate(new Vec2(2,0),i*astep)),0);
             b.setLinearVelocity(Util.rotate(new Vec2(10,0),i*astep));
             emitGameObject(so);
@@ -190,8 +192,12 @@ public class PlayerObject extends PolygonGameObject {
         return m_currentWeapon.getVelocity(); 
     }
 
+    /*
     public Color getColor(){
         return m_color;
     }
+    */
+
+    public String getRenderKey(){ return "bullet"; }
 }
 

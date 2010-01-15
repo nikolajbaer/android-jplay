@@ -5,20 +5,21 @@ import org.jbox2d.dynamics.Body; import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.common.Vec2;
 
 /* AWT */
-import java.awt.*;
+//import java.awt.*;
 
 /* local */
 import com.nikolajbaer.game.Game;
 
 public class ShrapnelObject extends PolygonGameObject {
-    private Color m_color;
+    //private Color m_color;
     private int m_impacts;
     private int m_life;
     private int m_size;
 
-    public ShrapnelObject(Body b,Color c,int size){
+    // TODO how do i keep the color?
+    public ShrapnelObject(Body b,int size){
         super(b,new float[]{-1,-1,0,1,1,-1});
-        m_color=c;
+        //m_color=c;
         m_impacts=0;
         m_size=size;
         m_life=30;
@@ -35,6 +36,7 @@ public class ShrapnelObject extends PolygonGameObject {
         return false;
     }
 
+    /*
     public void draw( Graphics2D g ){
         g.setColor(m_color);
         Vec2 p=Game.toScreen(m_body.getPosition());
@@ -44,6 +46,7 @@ public class ShrapnelObject extends PolygonGameObject {
         //g.fillOval(0,0,m_size,m_size);
 
     }
+    */
 
     public boolean tick(){ 
         if(m_impacts>=1){
@@ -52,5 +55,7 @@ public class ShrapnelObject extends PolygonGameObject {
         }
         return true;
     }
+
+    public String getRenderKey(){ return "shrapnel"; }
 
 }

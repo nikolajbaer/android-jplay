@@ -5,7 +5,7 @@ import org.jbox2d.dynamics.Body; import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.common.Vec2;
 
 /* AWT */
-import java.awt.*;
+//import java.awt.*;
 
 /* local */
 import com.nikolajbaer.game.Game;
@@ -27,6 +27,7 @@ public class PolygonGameObject extends GameObject {
         }
     }
 
+    /*
     public void draw( Graphics2D g ){ 
         g.setColor(Color.gray);
         Vec2 p=Game.toScreen(m_body.getPosition());
@@ -37,5 +38,7 @@ public class PolygonGameObject extends GameObject {
         //g.fillRect(-mp,-mp,mp*2,mp*2);
         g.fillPolygon(x_pts,y_pts,x_pts.length);
     }
+    */
 
+    public String getRenderKey(){ return "filled_polygon"; }
 }
