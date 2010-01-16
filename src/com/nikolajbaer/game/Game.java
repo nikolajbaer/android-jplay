@@ -37,23 +37,24 @@ public class Game implements GameObjectEventListener,ContactListener {
     private PlayerObject m_player;
     private boolean[][] m_obstacleGrid;
 
-    public static final float PPM = 10.0f;
+    //public static final float PPM = 10.0f;
 
     // CONSIDER currently the simplest way to manage physics world interrelationships (see PlayerObect GO create)
     public static Game game=null; // singleton
 
     // HACK keep canvas width/height to draw HUD
     // TODO detach display of game from game itself
-    private int m_canvasWidth;
-    private int m_canvasHeight;
+    //private int m_canvasWidth;
+    //private int m_canvasHeight;
 
     public Game(int width,int height){
         // set world width/height
-        m_width=1/PPM * width;
-        m_height=1/PPM * height;
-
-        m_canvasWidth=width;
-        m_canvasHeight=height;
+        //m_width=1/PPM * width;
+        //m_height=1/PPM * height;
+        m_width=width;
+        m_height=height;
+        //m_canvasWidth=width;
+        //m_canvasHeight=height;
 
         // make world 2 times wider and higher
 		Vec2 minWorldAABB = new Vec2(-m_width,-m_height);
@@ -74,6 +75,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         m_toRemove=new ArrayList<GameObject>();
         m_gamePlayers=new ArrayList<GamePlayer>();
         m_gameObstacles=new ArrayList<GameObject>();
+        m_renderables=new ArrayList<Renderable>();
 
         // for now generate game tanks
         float[] verts={-1.0f,1.0f, 0.0f,-2.0f,1.0f,1.0f};
@@ -106,6 +108,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         // and randomly choose a couple squares to fill in
         // and create polygon rects on those   
         // TODO add A* path finding to AI
+        /*
         int OBS_GRIDWIDTH=20;
         int OBS_GRIDHEIGHT=40;
         float sqw=(m_width/(float)OBS_GRIDWIDTH);
@@ -131,6 +134,7 @@ public class Game implements GameObjectEventListener,ContactListener {
                 }
             }
         }
+        */
         /*
         int nobst=5;
         for(int i=0;i<nobst;i++){
@@ -201,9 +205,11 @@ public class Game implements GameObjectEventListener,ContactListener {
         return b;
     }
 
+    /*
     public static Vec2 toScreen(Vec2 v){
         return new Vec2(v.x*PPM,v.y*PPM);
     }
+    */
 
     // TODO refactor this?
     // CONSIDER should be LivePlayer not player object?
@@ -211,9 +217,11 @@ public class Game implements GameObjectEventListener,ContactListener {
         return m_player;
     }
 
+    /*
     public static Vec2 toWorld(Vec2 v){
         return new Vec2(v.x*(1.0f/PPM),v.y*(1.0f/PPM));
     }
+    */
 
     public void tick(){
         // TODO use iterators

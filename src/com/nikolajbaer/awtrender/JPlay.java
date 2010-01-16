@@ -1,4 +1,4 @@
-package com.nikolajbaer.engine;
+package com.nikolajbaer.awtrender;
 
 /* java */
 import java.util.ArrayList;
@@ -9,18 +9,23 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.*;
 
 /* local */
 import com.nikolajbaer.game.Game;
 import com.nikolajbaer.render.Renderable;
+import com.nikolajbaer.render.RenderObject;
 
 public class JPlay extends JFrame implements ActionListener { //implements Runnable{
     private Game m_game;
     private Timer m_timer;
-    private int m_gameWidth=400;
-    private int m_gameHeight=600;
     private BufferedImage m_backBuffer ;
     private Graphics2D m_backGraphics;
+
+    // pixels per meter
+    public static final float PPM = 10.0f;
+    private int m_gameWidth=400;
+    private int m_gameHeight=600;
 
     public JPlay(String name){
         super(name);
@@ -28,7 +33,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_backBuffer = new BufferedImage( m_gameWidth,m_gameHeight, BufferedImage.TYPE_INT_RGB ) ;
         m_backGraphics = (Graphics2D)m_backBuffer.getGraphics();
         m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        m_game=new Game(m_gameWidth,m_gameHeight);
+        m_game=new Game((int)(m_gameWidth/PPM),(int)(m_gameHeight/PPM)); // game is in meters
         Game.game=m_game;
         m_timer = new Timer(1000/40,this);
         m_timer.setInitialDelay(500);
@@ -93,14 +98,24 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_backGraphics.fillRect( 0,0, m_gameWidth,m_gameHeight) ;
         // render game field
         //m_game.draw(m_backGraphics);
+
         ArrayList<Renderable> renderables=m_game.getRenderables();
+        AffineTransform t=m_backGraphics.getTransform();
         for(int i=0;i<renderables.size(); i++){
             Renderable r=renderables.get(i);
-            String k=r.getRenderKey(); 
-            float[] t=r.getWorldTransform();
+            AWTRenderObject ro=(AWTRenderObject)r.getRenderObject(); 
+            if(ro==null){
+                ro=new PolygonRenderObject();
+                r.setRenderObject(ro);
+            }
+            float[] wt=r.getWorldTransform();
+            ro.setGraphics(m_backGraphics);
+            ro.setPixelRatio(PPM);
+            ro.renderFromWorld(wt[0],wt[1],wt[2]);
             // TODO draw sprite k at location t
             // CONSIDER sprite lookup is expensive, should embed it in renderable as renderobject
             //  and call .renderAtTransform(), maybe setup graphics first or something..
+            m_backGraphics.setTransform(new AffineTransform(t));
         }
         
         Graphics g = getGraphics();
