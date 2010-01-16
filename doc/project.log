@@ -19,3 +19,10 @@ So now the challenge is that with prediction and aggressive maneuvering, my AI i
 One thing I keep running into is the high number of back-references I need to do. For instance, efficient event passing, or determination of who shot what at whom, and so on, requires references to and from the various game objects. Given java's garbage collection scheme, I think this means I am prone to alot of memory leaks. I will need to keep a close eye on this.
 
 The next big challenges I want to overcome is to add multiple weapons and ports for weapons, add nicer obstacles, and start to think about how to detach the display code from the game code so that my porting to Android will be easier. All in all, though, this is a fun project. Another note, though, is that the tank movement still seems a bit clunky, as it is a hybrid of actual physics motions, and shoe-horned direct changes to constants like linear and angular velocity. This will require more tweaking.
+
+1/15/2009
+I have fully extracted the awt specific stuff from the game objects, and need only to figure out a simple way of managing specific render objects for each game object. My current strategy is to have each game object be a Renderable, and offer up a key. This key will be used to lookup the specific render object to be used (interpreted based upon which rendering system i use). The render object is then set against the game object, so every time i iterate through them, i can quickly extract the appropriate object to be rendering. As I write this, i am realizing that perhaps going the other way would be less chaotic, where my render objects would attach to game objects, and i jsut run through the render objects.
+
+Either way, the challenge is to efficiently correlate a rendering to an object, and be able to swap these out pretty easily. Ultimately it would be nice to add layers, and nodes so i can have sub-object renderobjects (e.g. guns on tank sprites). 
+
+The hope is to get this converted over, then get the polygon based rendering back up again, then patch this whole thing into an android project so i can get moving on an actual phone-playable prototype!
