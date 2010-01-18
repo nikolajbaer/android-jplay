@@ -2,6 +2,8 @@ package com.nikolajbaer.awtrender;
 
 /* java */
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 /* AWT */
 import java.awt.*;
@@ -21,6 +23,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
     private Timer m_timer;
     private BufferedImage m_backBuffer ;
     private Graphics2D m_backGraphics;
+    private HashMap<String,AWTRenderObject> m_renderObjects;
 
     // pixels per meter
     public static final float PPM = 10.0f;
@@ -29,6 +32,9 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
 
     public JPlay(String name){
         super(name);
+
+        m_renderObjects=new HashMap<String,AWTRenderObject>();
+
         setSize(m_gameWidth+10,m_gameHeight+20);
         m_backBuffer = new BufferedImage( m_gameWidth,m_gameHeight, BufferedImage.TYPE_INT_RGB ) ;
         m_backGraphics = (Graphics2D)m_backBuffer.getGraphics();
@@ -105,7 +111,20 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             Renderable r=renderables.get(i);
             AWTRenderObject ro=(AWTRenderObject)r.getRenderObject(); 
             if(ro==null){
-                ro=new PolygonRenderObject();
+                // TODO lookup render object via key
+                // get render key  
+                String k=r.getRenderKey();
+                // if in m_renderObjects, then attach that,
+                ro=m_renderObjects.get(k);
+                // otherwise create a new one from the renderobject factory 
+                // CONSIDER do i want a factory to be retrieved or an instance?
+                if(ro==null){
+                    // TODO add a renderobjectfactory abstract class
+                    // that i can override for each render lib
+                    System.out.println("Building a "+k+" Render Object");
+                    ro=new PolygonRenderObject();
+                    m_renderObjects.put(k,ro);
+                }
                 r.setRenderObject(ro);
             }
             float[] wt=r.getWorldTransform();

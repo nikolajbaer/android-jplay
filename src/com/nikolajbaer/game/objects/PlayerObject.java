@@ -198,6 +198,6 @@ public class PlayerObject extends PolygonGameObject {
     }
     */
 
-    public String getRenderKey(){ return "bullet"; }
+    public String getRenderKey(){ return "tank"; }
 }
 
