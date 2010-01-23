@@ -9,10 +9,6 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.common.Vec2;
 
-/* AWT */
-//import java.awt.*;
-//import java.awt.geom.*;
-
 /* local */
 import com.nikolajbaer.game.Game;
 import com.nikolajbaer.Util;
@@ -37,9 +33,6 @@ public abstract class GameObject implements Renderable {
         m_gameObjectEventListeners = new ArrayList<GameObjectEventListener>();
     }
 
-    // TODO make this more accessible
-    // CONSDIER stupid that this isn't in Vec2
-
     public Vec2 getDir(){
         return Util.rotate(new Vec2(0,-1),m_body.getAngle());
     }
@@ -49,11 +42,6 @@ public abstract class GameObject implements Renderable {
      * do whatever per step. return false if this game object is to be removed.
      */
     public boolean tick(){ return true; }
-
-    // TODO this should be abstracted into a GameObjectDisplay class
-    // so i can make game code separate from display code to port to Android
-    //public abstract void draw( Graphics2D g );
-    // do nothing
 
     // TODO shouldn't this kind of framework already be pre-packaged?
     public void addGameObjectEventListener(GameObjectEventListener l){

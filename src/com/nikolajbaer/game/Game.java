@@ -13,10 +13,6 @@ import org.jbox2d.collision.ShapeDef;
 import org.jbox2d.dynamics.*;
 import org.jbox2d.dynamics.contacts.*;
 
-/* AWT Specific */
-//import java.awt.*;
-//import java.awt.geom.*;
-
 /* local */
 import com.nikolajbaer.game.objects.*;
 import com.nikolajbaer.Util;
@@ -37,25 +33,13 @@ public class Game implements GameObjectEventListener,ContactListener {
     private PlayerObject m_player;
     private boolean[][] m_obstacleGrid;
 
-    //public static final float PPM = 10.0f;
-
     // CONSIDER currently the simplest way to manage physics world interrelationships (see PlayerObect GO create)
     public static Game game=null; // singleton
 
-    // HACK keep canvas width/height to draw HUD
-    // TODO detach display of game from game itself
-    //private int m_canvasWidth;
-    //private int m_canvasHeight;
-
     public Game(int width,int height){
         // set world width/height
-        //m_width=1/PPM * width;
-        //m_height=1/PPM * height;
         m_width=width;
         m_height=height;
-        //m_canvasWidth=width;
-        //m_canvasHeight=height;
-
         // make world 2 times wider and higher
 		Vec2 minWorldAABB = new Vec2(-m_width,-m_height);
 		Vec2 maxWorldAABB = new Vec2(m_width*2,m_height*2);
@@ -71,15 +55,20 @@ public class Game implements GameObjectEventListener,ContactListener {
         m_boundingBox[2]=createStaticRect( m_width,0.0f,10.0f,m_height); //right
         m_boundingBox[3]=createStaticRect( 0.0f,m_height, m_width, 10.0f); //bottom
 
+        // Create arrays for various objects in game
         m_gameObjects=new ArrayList<GameObject>();
         m_toRemove=new ArrayList<GameObject>();
         m_gamePlayers=new ArrayList<GamePlayer>();
         m_gameObstacles=new ArrayList<GameObject>();
         m_renderables=new ArrayList<Renderable>();
 
+    }
+
+    public void addPlayer(GamePlayer gp,PlayerObject po){
         // for now generate game tanks
         float[] verts={-1.0f,1.0f, 0.0f,-2.0f,1.0f,1.0f};
 
+        // TODO make an easy "add player" method
         Vec2 mid=new Vec2(m_width/2.0f,m_height/2.0f);
         Vec2 offset=new Vec2(m_width/2*0.75f,0);
         int np=2; //6;
@@ -91,17 +80,20 @@ public class Game implements GameObjectEventListener,ContactListener {
             Vec2 rv=Util.rotate( offset, (float)(i*a) );
             float ra=(float)(i*a < Math.PI ? i*a+Math.PI : i*a-Math.PI);
             b.setXForm( mid.add(rv) ,(float)(ra+Math.PI/2)); // i guess it goes from 0,1 not 1,0
-            PlayerObject po=new PlayerObject(b,verts);
+            //PlayerObject po=new PlayerObject(b,verts);
             po.addGameObjectEventListener(this);
             addGameObject(po);
-            if(i==0){ 
+
+            /*if(i==0){ 
                 m_player=po; 
                 LivePlayer lp=new LivePlayer(m_player);
                 m_gamePlayers.add(lp);
             }else{
                 HunterPlayer gp=new HunterPlayer(po);
                 m_gamePlayers.add(gp);
-            }
+            }*/
+
+            m_gamePlayers.add(gp);
         }
 
         // TODO add obstacle grid
@@ -242,39 +234,6 @@ public class Game implements GameObjectEventListener,ContactListener {
         }
         m_world.step(1.0f/40.0f,1);
     }
-
-    /*
-    public void draw( Graphics2D g ){
-        // draw game objects 
-        AffineTransform t=g.getTransform();
-        for(int i=0;i<m_gameObjects.size();i++){
-            m_gameObjects.get(i).draw(g);
-            g.setTransform(new AffineTransform(t));
-        }
-    
-        // draw HUD 
-        // TODO make a detached rendering engine. 
-        // HACK hardcoding width here for the moment to render hud
-        int np=m_gamePlayers.size();
-        int msz=(int)(m_canvasWidth/np-10);
-        for(int i=0;i<np; i++){
-            // CONSIDER assumes player object
-            PlayerObject p=(PlayerObject)m_gamePlayers.get(i).getGameObject();
-            //g.setColor(p.getColor());
-            int bx=i*(msz+10)+5;
-            // energy 
-            g.drawRect(bx,m_canvasHeight-35,msz,5);
-            g.fillRect(bx,m_canvasHeight-35,(int)(msz*p.getEnergyRatio()),5);
-            // shields
-            g.drawRect(bx,m_canvasHeight-28,msz,5);
-            g.fillRect(bx,m_canvasHeight-28,(int)(msz*p.getShieldsRatio()),5);
-            // hull 
-            g.drawRect(bx,m_canvasHeight-21,msz,5);
-            g.fillRect(bx,m_canvasHeight-21,(int)(msz*p.getHullRatio()),5);
-
-        }
-    }
-    */
 
     public void gameObjectCreated(GameObjectEvent e){
         addGameObject(e.getCreated());

@@ -4,9 +4,6 @@ package com.nikolajbaer.game.objects;
 import org.jbox2d.dynamics.Body; import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.common.Vec2;
 
-/* AWT */
-//import java.awt.*;
-
 /* local */
 import com.nikolajbaer.game.Game;
 
@@ -35,18 +32,6 @@ public class ShrapnelObject extends PolygonGameObject {
     public boolean doesDamage(){
         return false;
     }
-
-    /*
-    public void draw( Graphics2D g ){
-        g.setColor(m_color);
-        Vec2 p=Game.toScreen(m_body.getPosition());
-        g.translate(p.x,p.y);
-        int s=(int)(m_size*(m_life/30.0f));
-        g.fillOval(0,0,s,s);
-        //g.fillOval(0,0,m_size,m_size);
-
-    }
-    */
 
     public boolean tick(){ 
         if(m_impacts>=1){

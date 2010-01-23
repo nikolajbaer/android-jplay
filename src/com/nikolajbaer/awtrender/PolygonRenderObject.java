@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.geom.*;
 
 public class PolygonRenderObject extends AWTRenderObject { 
-    private Graphics2D m_graphics; 
     private int[] x_pts;
     private int[] y_pts;
     private Color m_color;
@@ -17,10 +16,6 @@ public class PolygonRenderObject extends AWTRenderObject {
         x_pts=new int[]{0,20,20,0};        
         y_pts=new int[]{0,0,20,20};        
         m_color=Color.gray;
-    }
-
-    public void setGraphics(Graphics2D g){
-        m_graphics=g;
     }
 
     public void renderFromWorld(float x,float y,float a){

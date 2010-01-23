@@ -38,7 +38,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         setSize(m_gameWidth+10,m_gameHeight+20);
         m_backBuffer = new BufferedImage( m_gameWidth,m_gameHeight, BufferedImage.TYPE_INT_RGB ) ;
         m_backGraphics = (Graphics2D)m_backBuffer.getGraphics();
-        m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         m_game=new Game((int)(m_gameWidth/PPM),(int)(m_gameHeight/PPM)); // game is in meters
         Game.game=m_game;
         m_timer = new Timer(1000/40,this);
@@ -104,6 +104,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_backGraphics.fillRect( 0,0, m_gameWidth,m_gameHeight) ;
         // render game field
         //m_game.draw(m_backGraphics);
+        //m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
         ArrayList<Renderable> renderables=m_game.getRenderables();
         AffineTransform t=m_backGraphics.getTransform();
@@ -122,7 +123,8 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
                     // TODO add a renderobjectfactory abstract class
                     // that i can override for each render lib
                     System.out.println("Building a "+k+" Render Object");
-                    ro=new PolygonRenderObject();
+                    //ro=new PolygonRenderObject();
+                    ro=new PNGRenderObject("media/"+k+".png");
                     m_renderObjects.put(k,ro);
                 }
                 r.setRenderObject(ro);

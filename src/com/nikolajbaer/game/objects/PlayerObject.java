@@ -7,17 +7,12 @@ import java.lang.Math;
 import org.jbox2d.dynamics.Body; import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.common.Vec2;
 
-/* AWT */
-//import java.awt.geom.*;
-//import java.awt.*;
-
 /* local */
 import com.nikolajbaer.game.Game;
 import com.nikolajbaer.game.weapons.*;
 import com.nikolajbaer.Util;
 
 public class PlayerObject extends PolygonGameObject {
-    //protected Color m_color;
     protected float m_hull; // TODO make it shields + hull
     protected float m_shields;
     protected float m_energy;
@@ -32,7 +27,6 @@ public class PlayerObject extends PolygonGameObject {
     
     public PlayerObject(Body b,float[] vertices){
         super(b,vertices);
-        //m_color=c; 
         m_hull=HULL_MAX;
         m_shields=SHIELD_MAX;
         m_energy=ENERGY_MAX;
@@ -94,20 +88,6 @@ public class PlayerObject extends PolygonGameObject {
         //m_body.setLinearVelocity(d);
         thruster=-12.0f;
     }
-
-    /*
-    public void draw( Graphics2D g ){
-        Stroke orig_s=g.getStroke();
-        g.setStroke(new BasicStroke(2.0f)); 
-        g.setColor(m_color);
-        Vec2 p=Game.toScreen(m_body.getPosition());
-        g.translate(p.x,p.y);
-        g.rotate(m_body.getAngle());
-
-        g.drawPolygon(x_pts,y_pts,x_pts.length);
-        g.setStroke(orig_s);
-    }
-    */
 
     public boolean tick(){
         // recharge energy and shields
@@ -191,12 +171,6 @@ public class PlayerObject extends PolygonGameObject {
     public float getWeaponVelocity(){
         return m_currentWeapon.getVelocity(); 
     }
-
-    /*
-    public Color getColor(){
-        return m_color;
-    }
-    */
 
     public String getRenderKey(){ return "tank"; }
 }
