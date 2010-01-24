@@ -13,6 +13,7 @@ public class TankCannon extends Weapon {
     private boolean m_shooting;
     private int m_reloadCount;
     private static float m_bulletVelocity = 10.0f;
+    private static final int RELOAD_CNTR=20;
 
     public TankCannon(){
         m_shooting=false;
@@ -29,7 +30,7 @@ public class TankCannon extends Weapon {
 
     public void tick(PlayerObject shooter){
         //System.out.println("ticking");
-        if(m_shooting && m_reloadCount%10 == 0 ){
+        if(m_shooting && m_reloadCount%RELOAD_CNTR == 0 ){
             if(shooter.getEnergy() > 10){
                 shooter.drawEnergy(20);
                 // TODO make it so the shooter can't get hit by their own bullets?

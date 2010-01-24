@@ -20,8 +20,6 @@ public abstract class GameObject implements Renderable {
     protected Body m_body;
     protected RenderObject m_renderObject;
     protected float thruster;
-    protected static float MAX_LIN_VEL=10.0f;
-    protected static float MAX_ANG_VEL=1.0f;
 
     protected ArrayList<GameObjectEventListener> m_gameObjectEventListeners;
     protected int m_damage=0; // CONSIDER do i really need this here?

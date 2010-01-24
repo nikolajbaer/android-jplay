@@ -4,6 +4,9 @@ package com.nikolajbaer.awtrender;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/* jbox2d */
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.*;
 
 /* AWT */
 import java.awt.*;
@@ -14,9 +17,11 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.*;
 
 /* local */
-import com.nikolajbaer.game.Game;
 import com.nikolajbaer.render.Renderable;
 import com.nikolajbaer.render.RenderObject;
+import com.nikolajbaer.game.objects.*;
+import com.nikolajbaer.Util;
+import com.nikolajbaer.game.*;
 
 public class JPlay extends JFrame implements ActionListener { //implements Runnable{
     private Game m_game;
@@ -39,7 +44,9 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_backBuffer = new BufferedImage( m_gameWidth,m_gameHeight, BufferedImage.TYPE_INT_RGB ) ;
         m_backGraphics = (Graphics2D)m_backBuffer.getGraphics();
         //m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        m_game=new Game((int)(m_gameWidth/PPM),(int)(m_gameHeight/PPM)); // game is in meters
+        int gwidth=(int)(m_gameWidth/PPM);
+        int gheight=(int)(m_gameHeight/PPM);
+        m_game=new Game(gwidth,gheight); // game is in meters
         Game.game=m_game;
         m_timer = new Timer(1000/40,this);
         m_timer.setInitialDelay(500);
@@ -85,6 +92,30 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             }
             public void keyTyped(KeyEvent e){}
         });
+
+        // Add Players
+        float[] verts={-2.4f,3.2f,-2.4f,-3.2f,2.4f,-3.2f,2.4f,3.2f};
+
+        // Spread the players out in a ring 
+        Vec2 mid=new Vec2(gwidth/2.0f,gheight/2.0f);
+        Vec2 offset=new Vec2(gwidth/2*0.75f,0);
+        int np=2; //6;
+        for(int i=0;i<np;i++){
+            Body b=m_game.createRect(0.2f,-2.4f,-3.2f,4.8f,6.4f);
+            //Body b=m_game.createPolygon(1.0f, verts );
+
+            double a=(2*Math.PI)/np;
+            Vec2 rv=Util.rotate( offset, (float)(i*a) );
+            float ra=(float)(i*a < Math.PI ? i*a+Math.PI : i*a-Math.PI);
+            b.setXForm( mid.add(rv) ,(float)(ra+Math.PI/2)); // i guess it goes from 0,1 not 1,0
+            PlayerObject po=new PlayerObject(b,verts);
+
+            if(i==0){ 
+                m_game.addPlayer(new LivePlayer(po),true);
+            }else{
+                m_game.addPlayer(new HunterPlayer(po));
+            }
+        }
     }
 
     public void actionPerformed(ActionEvent e) {

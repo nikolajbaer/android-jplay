@@ -63,84 +63,22 @@ public class Game implements GameObjectEventListener,ContactListener {
         m_renderables=new ArrayList<Renderable>();
 
     }
+    
+    public void addPlayer(GamePlayer gp){
+        addPlayer(gp,false);
+    }
 
-    public void addPlayer(GamePlayer gp,PlayerObject po){
-        // for now generate game tanks
-        float[] verts={-1.0f,1.0f, 0.0f,-2.0f,1.0f,1.0f};
-
-        // TODO make an easy "add player" method
-        Vec2 mid=new Vec2(m_width/2.0f,m_height/2.0f);
-        Vec2 offset=new Vec2(m_width/2*0.75f,0);
-        int np=2; //6;
-        for(int i=0;i<np;i++){
-            //Body b=createRect(0.5f,-1.0f,-1.0f,2.0f,2.0f);
-            Body b=createPolygon(1.0f, verts );
-
-            double a=(2*Math.PI)/np;
-            Vec2 rv=Util.rotate( offset, (float)(i*a) );
-            float ra=(float)(i*a < Math.PI ? i*a+Math.PI : i*a-Math.PI);
-            b.setXForm( mid.add(rv) ,(float)(ra+Math.PI/2)); // i guess it goes from 0,1 not 1,0
-            //PlayerObject po=new PlayerObject(b,verts);
-            po.addGameObjectEventListener(this);
-            addGameObject(po);
-
-            /*if(i==0){ 
-                m_player=po; 
-                LivePlayer lp=new LivePlayer(m_player);
-                m_gamePlayers.add(lp);
-            }else{
-                HunterPlayer gp=new HunterPlayer(po);
-                m_gamePlayers.add(gp);
-            }*/
-
-            m_gamePlayers.add(gp);
+    public void addPlayer(GamePlayer gp,boolean is_player){
+        addGameObject(gp.getGameObject());
+        gp.getGameObject().addGameObjectEventListener(this);
+        m_gamePlayers.add(gp);
+        if(is_player){
+            m_player=(PlayerObject)gp.getGameObject();
         }
+    }
 
-        // TODO add obstacle grid
-        // and randomly choose a couple squares to fill in
-        // and create polygon rects on those   
-        // TODO add A* path finding to AI
-        /*
-        int OBS_GRIDWIDTH=20;
-        int OBS_GRIDHEIGHT=40;
-        float sqw=(m_width/(float)OBS_GRIDWIDTH);
-        float sqh=(m_height/(float)OBS_GRIDHEIGHT);
-        m_obstacleGrid=new boolean[OBS_GRIDWIDTH][OBS_GRIDHEIGHT];
-        for(int i=0;i<OBS_GRIDWIDTH;i++){
-            for(int j=0;j<OBS_GRIDHEIGHT;j++){
-                // TODO more efficient to not do rand every iteration..
-                if(Math.random()>0.98){
-                    m_obstacleGrid[i][j]=true;
-                    float x=i*sqw;
-                    float y=j*sqh;
-                    float w=sqw;
-                    float h=sqh;
-                    float[] overts={x,y, x,y+h, x+w,y+h, x+w,y };
-                    Body b=createRect(0.0f,x,y,w,h);
-                    PolygonGameObject pog=new PolygonGameObject(b,overts);
-                    m_gameObstacles.add(pog);
-                    //m_gameObjects.add(pog);
-                    addGameObject(pog);
-                }else{
-                    m_obstacleGrid[i][j]=false;
-                }
-            }
-        }
-        */
-        /*
-        int nobst=5;
-        for(int i=0;i<nobst;i++){
-            float x=0.0f;
-            float y=i*3.0f;
-            float w=5.0f;
-            float h=1.0f;
-            float[] overts={x,y, x,y+h, x+w,y+h, x+w,y };
-            Body b=createRect(0.0f,x,y,w,h);
-            PolygonGameObject pog=new PolygonGameObject(b,overts);
-            m_gameObstacles.add(pog);
-            m_gameObjects.add(pog);
-        }
-        */
+    public void addObstacle(){
+        // TODO add obstacle grid manufacturing thingy
     }
 
     public Body createCircle(float density, float radius){

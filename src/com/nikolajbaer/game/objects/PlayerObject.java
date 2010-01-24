@@ -21,6 +21,8 @@ public class PlayerObject extends PolygonGameObject {
     protected static final float ENERGY_MAX = 100;
     protected static final float ENERGY_RECHARGE_RATE = 1;
     protected static final float SHIELD_RECHARGE_RATE = 0.1f;
+    protected static float MAX_LIN_VEL=30.0f;
+    protected static float MAX_ANG_VEL=8.0f;
 
     protected Weapon m_currentWeapon; // TODO make it have weapon ports
     protected static boolean m_isDead=false;
@@ -39,18 +41,21 @@ public class PlayerObject extends PolygonGameObject {
 
     public void left(){
         if(m_body==null){ return; }
-        //m_body.setAngularVelocity(-1.0f);
+        m_body.setAngularVelocity(-1.0f);
+        /*
         if(m_body.getAngularVelocity() > -MAX_ANG_VEL){
-            m_body.applyTorque(-120.0f);
-        }
+            m_body.applyTorque(-820.0f);
+        }*/
     }
-    
+   
+    // TODO make this more natural 
     public void right(){
         if(m_body==null){ return; }
-        //m_body.setAngularVelocity(1.0f);
+        m_body.setAngularVelocity(1.0f);
+        /*
         if(m_body.getAngularVelocity() < MAX_ANG_VEL){
-            m_body.applyTorque(120.0f);
-        }
+            m_body.applyTorque(820.0f);
+        }*/
     }
 
     public void stopRotate(){
@@ -71,22 +76,22 @@ public class PlayerObject extends PolygonGameObject {
 
     public void halt(){
         //System.out.println("halting");
-        //m_body.setLinearVelocity(new Vec2(0.0f,0.0f));
+        m_body.setLinearVelocity(new Vec2(0.0f,0.0f));
         thruster=0.0f;
     }
 
     public void forward(){
         Vec2 d=getDir().mul(8.0f);
         //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
-        //m_body.setLinearVelocity(d);
-        thruster=25.0f;
+        m_body.setLinearVelocity(d);
+        //thruster=65.0f;
     }
 
     public void reverse(){
-        //Vec2 d=getDir().mul(-8.0f);
+        Vec2 d=getDir().mul(-8.0f);
         //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
-        //m_body.setLinearVelocity(d);
-        thruster=-12.0f;
+        m_body.setLinearVelocity(d);
+        //thruster=-50.0f;
     }
 
     public boolean tick(){
