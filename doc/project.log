@@ -20,9 +20,16 @@ One thing I keep running into is the high number of back-references I need to do
 
 The next big challenges I want to overcome is to add multiple weapons and ports for weapons, add nicer obstacles, and start to think about how to detach the display code from the game code so that my porting to Android will be easier. All in all, though, this is a fun project. Another note, though, is that the tank movement still seems a bit clunky, as it is a hybrid of actual physics motions, and shoe-horned direct changes to constants like linear and angular velocity. This will require more tweaking.
 
-1/15/2009
+1/15/2010
 I have fully extracted the awt specific stuff from the game objects, and need only to figure out a simple way of managing specific render objects for each game object. My current strategy is to have each game object be a Renderable, and offer up a key. This key will be used to lookup the specific render object to be used (interpreted based upon which rendering system i use). The render object is then set against the game object, so every time i iterate through them, i can quickly extract the appropriate object to be rendering. As I write this, i am realizing that perhaps going the other way would be less chaotic, where my render objects would attach to game objects, and i jsut run through the render objects.
 
 Either way, the challenge is to efficiently correlate a rendering to an object, and be able to swap these out pretty easily. Ultimately it would be nice to add layers, and nodes so i can have sub-object renderobjects (e.g. guns on tank sprites). 
 
 The hope is to get this converted over, then get the polygon based rendering back up again, then patch this whole thing into an android project so i can get moving on an actual phone-playable prototype!
+
+1/23/2010
+I haven't been doing much lately. Refactoring the rendering kindof took some of my steam, as it set me back a bit. Finally got the sprites to render in the right spot. Since i set up simple tank looking sprites, now I am annoyed that these things don't move like a tank, so i am endeavouring to fix that.
+
+I pulled the obstacles out for the time being. I also refactored the game player adding to outside of the game object, so i can add in game players to the game after it is initialized. This makes it a bit easier to manipulate from my external class.
+
+All in all, a bit dismayed at my loss of momentum. I am realizing all the loose strings at the moment, and thinking maybe i picked a difficult first game. I might need to review what is left so i can at least figure out what is left to start play testing this thing.
