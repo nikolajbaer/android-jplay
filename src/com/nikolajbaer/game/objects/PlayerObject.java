@@ -16,7 +16,7 @@ public class PlayerObject extends PolygonGameObject {
     protected float m_hull; // TODO make it shields + hull
     protected float m_shields;
     protected float m_energy;
-    protected static final float SHIELD_MAX = 100;
+    protected static final float SHIELD_MAX = 10;
     protected static final float HULL_MAX = 100;
     protected static final float ENERGY_MAX = 100;
     protected static final float ENERGY_RECHARGE_RATE = 1;
@@ -77,7 +77,7 @@ public class PlayerObject extends PolygonGameObject {
     }
 
     public void halt(){
-        System.out.println(this+" halting");
+        //System.out.println(this+" halting");
         m_body.setLinearVelocity(new Vec2(0.0f,0.0f));
         thruster=0.0f;
     }
@@ -85,7 +85,7 @@ public class PlayerObject extends PolygonGameObject {
     public void forward(){
         stopRotate();
         Vec2 d=getDir().mul(8.0f);
-        System.out.println(this+" going forward"+ d);
+        //System.out.println(this+" going forward"+ d);
         //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
         m_body.setLinearVelocity(d);
         //thruster=65.0f;
@@ -94,7 +94,7 @@ public class PlayerObject extends PolygonGameObject {
     public void reverse(){
         stopRotate();
         Vec2 d=getDir().mul(-8.0f);
-        System.out.println(this+" going in reverse "+d);
+        //System.out.println(this+" going in reverse "+d);
         //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
         m_body.setLinearVelocity(d);
         //thruster=-50.0f;
@@ -114,12 +114,12 @@ public class PlayerObject extends PolygonGameObject {
     }
 
     public void triggerOn(){
-        System.out.println(this+" firing");
+        //System.out.println(this+" firing");
         m_currentWeapon.triggerOn();
     }
 
     public void triggerOff(){
-       System.out.println(this+" ceasing fire");
+       //System.out.println(this+" ceasing fire");
        m_currentWeapon.triggerOff();
     } 
 

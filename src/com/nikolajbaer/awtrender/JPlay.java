@@ -29,6 +29,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
     private BufferedImage m_backBuffer ;
     private Graphics2D m_backGraphics;
     private HashMap<String,AWTRenderObject> m_renderObjects;
+    private HashMap<Integer,Boolean> m_keyMap;
 
     // pixels per meter
     public static final float PPM = 10.0f;
@@ -51,45 +52,16 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         m_timer = new Timer(1000/40,this);
         m_timer.setInitialDelay(500);
         m_timer.start(); 
-        
+       
+        m_keyMap=new HashMap<Integer,Boolean>(); 
+
         addKeyListener(new KeyListener(){
             public void keyPressed(KeyEvent e){
-                // TODO parse input commands 
-                // TODO keep key map
-                switch(e.getKeyCode()){
-                    case KeyEvent.VK_SPACE:
-                        m_game.getPlayer().triggerOn();
-                        break;
-                    case KeyEvent.VK_UP:
-                        m_game.getPlayer().forward();
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        m_game.getPlayer().reverse();
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        m_game.getPlayer().left();
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        m_game.getPlayer().right();
-                        break;
-                }
+                m_keyMap.put(e.getKeyCode(),true);
             }
 
             public void keyReleased(KeyEvent e){
-                switch(e.getKeyCode()){
-                    case KeyEvent.VK_SPACE:
-                        m_game.getPlayer().triggerOff();
-                        break;
-                    case KeyEvent.VK_UP:
-                    case KeyEvent.VK_DOWN:
-                        m_game.getPlayer().halt();
-                        break;
-                    case KeyEvent.VK_LEFT:
-                    case KeyEvent.VK_RIGHT:
-                        m_game.getPlayer().stopRotate();
-                        break;
-                }
-
+                m_keyMap.put(e.getKeyCode(),false);
             }
             public void keyTyped(KeyEvent e){}
         });
@@ -119,7 +91,37 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         }
     }
 
+    private Boolean getKey(int k){
+        Boolean b= m_keyMap.get(k);
+        return b != null && b;
+    }
+
+    private void processKeyActions(){
+        if(getKey(KeyEvent.VK_SPACE)){
+            m_game.getPlayer().triggerOn();
+        }else{
+            m_game.getPlayer().triggerOff();
+        }
+
+        // Tank like handling
+        if(getKey(KeyEvent.VK_LEFT)){
+            m_game.getPlayer().left();
+        }else if(getKey(KeyEvent.VK_RIGHT)){
+            m_game.getPlayer().right();
+        }else{
+            m_game.getPlayer().stopRotate();
+            if(getKey(KeyEvent.VK_UP)){
+                m_game.getPlayer().forward();
+            }else if(getKey(KeyEvent.VK_DOWN)){
+                m_game.getPlayer().reverse();
+            }else{
+                m_game.getPlayer().halt();
+            } 
+        }
+    }
+
     public void actionPerformed(ActionEvent e) {
+        processKeyActions();
         m_game.tick();
         render();
     }
