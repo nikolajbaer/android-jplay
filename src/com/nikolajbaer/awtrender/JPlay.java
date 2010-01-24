@@ -55,6 +55,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         addKeyListener(new KeyListener(){
             public void keyPressed(KeyEvent e){
                 // TODO parse input commands 
+                // TODO keep key map
                 switch(e.getKeyCode()){
                     case KeyEvent.VK_SPACE:
                         m_game.getPlayer().triggerOn();

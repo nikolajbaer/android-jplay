@@ -40,6 +40,7 @@ public class PlayerObject extends PolygonGameObject {
     // e.g. shields down, hull level critical, cannon reloading stalled
 
     public void left(){
+        halt();
         if(m_body==null){ return; }
         m_body.setAngularVelocity(-1.0f);
         /*
@@ -50,6 +51,7 @@ public class PlayerObject extends PolygonGameObject {
    
     // TODO make this more natural 
     public void right(){
+        halt();
         if(m_body==null){ return; }
         m_body.setAngularVelocity(1.0f);
         /*
@@ -75,20 +77,24 @@ public class PlayerObject extends PolygonGameObject {
     }
 
     public void halt(){
-        //System.out.println("halting");
+        System.out.println(this+" halting");
         m_body.setLinearVelocity(new Vec2(0.0f,0.0f));
         thruster=0.0f;
     }
 
     public void forward(){
+        stopRotate();
         Vec2 d=getDir().mul(8.0f);
+        System.out.println(this+" going forward"+ d);
         //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
         m_body.setLinearVelocity(d);
         //thruster=65.0f;
     }
 
     public void reverse(){
+        stopRotate();
         Vec2 d=getDir().mul(-8.0f);
+        System.out.println(this+" going in reverse "+d);
         //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
         m_body.setLinearVelocity(d);
         //thruster=-50.0f;
@@ -103,16 +109,18 @@ public class PlayerObject extends PolygonGameObject {
         if(m_shields > SHIELD_MAX){ m_shields = SHIELD_MAX; } 
 
         m_currentWeapon.tick(this);
-        thrust(thruster);
+        //thrust(thruster);
         return true;
     }
 
     public void triggerOn(){
+        System.out.println(this+" firing");
         m_currentWeapon.triggerOn();
     }
 
     public void triggerOff(){
-        m_currentWeapon.triggerOff();
+       System.out.println(this+" ceasing fire");
+       m_currentWeapon.triggerOff();
     } 
 
     // CONSIDER make beam weapons apply more damage to shields, and physical apply less,

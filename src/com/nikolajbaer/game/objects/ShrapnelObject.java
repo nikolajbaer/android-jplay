@@ -41,6 +41,6 @@ public class ShrapnelObject extends PolygonGameObject {
         return true;
     }
 
-    public String getRenderKey(){ return "shrapnel"; }
+    public String getRenderKey(){ return "bullet"; } // return "shrapnel"; }
 
 }
