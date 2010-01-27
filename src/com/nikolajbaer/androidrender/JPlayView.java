@@ -13,6 +13,7 @@ import android.graphics.RectF;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.graphics.drawable.Drawable;
 
 /* jbox2d */
 import org.jbox2d.common.Vec2;
@@ -24,7 +25,7 @@ import com.nikolajbaer.render.RenderObject;
 import com.nikolajbaer.game.objects.*;
 import com.nikolajbaer.Util;
 import com.nikolajbaer.game.*;
-
+import com.nikolajbaer.androidrender.R;
 
 class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
     private JPlayThread thread;
@@ -34,8 +35,9 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
 
         private boolean mRun;
         private RectF mScreenRect;
-        private Paint mJPlayPaint;
+        private Paint mClearPaint;
         private SurfaceHolder mSurfaceHolder;
+        private Context mContext;
    
         /* rendering tools */ 
         private HashMap<String,AndroidRenderObject> m_renderObjects;
@@ -44,14 +46,15 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
         /* game items */
         private Game m_game;
         public static final float PPM = 10.0f;
-        private int m_gameWidth=200;
-        private int m_gameHeight=200;
+        private int m_gameWidth=320;
+        private int m_gameHeight=400;
 
-        public JPlayThread(SurfaceHolder surfaceHolder){
+        public JPlayThread(SurfaceHolder surfaceHolder,Context context){
             mSurfaceHolder=surfaceHolder;
+            mContext = context;
             mRun=true;
-            mJPlayPaint = new Paint();
-            mJPlayPaint.setARGB(255,  255, 0, 0);
+            mClearPaint = new Paint();
+            mClearPaint.setARGB(255,  0, 0, 0);
             mScreenRect = new RectF(0,0,0,0);
 
             // init game
@@ -67,7 +70,7 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
             // Spread the players out in a ring 
             Vec2 mid=new Vec2(gwidth/2.0f,gheight/2.0f);
             Vec2 offset=new Vec2(gwidth/2*0.75f,0);
-            int np=2; //6;
+            int np=6;//2; //6;
             for(int i=0;i<np;i++){
                 Body b=m_game.createRect(0.2f,-2.4f,-3.2f,4.8f,6.4f);
                 //Body b=m_game.createPolygon(1.0f, verts );
@@ -88,6 +91,7 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
 
         /* Callback invoked when the surface dimensions change. */
         public void setSurfaceSize(int width, int height) {
+            Log.v(TAG,"Surface size: "+width+"x"+height);
             // synchronized to make sure these all change atomically
             synchronized (mSurfaceHolder) {
                 mScreenRect = new RectF(0,0,width,height);
@@ -129,6 +133,9 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         private void doDraw(Canvas c){
+            // TODO do dirty rect drawing
+            c.drawRect(mScreenRect,mClearPaint);
+
             ArrayList<Renderable> renderables=m_game.getRenderables();
             Log.v(TAG, "rendering "+renderables.size()+" objects");
 
@@ -141,7 +148,15 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
                     if(ro==null){
                         // TODO create render object
                         //ro=new PNGRenderObject("media/"+k+".png");
-                        ro=new DotRenderObject();
+                        //Drawable img = context.getResources().getDrawable(R.drawable.lander_crashed);
+                        // TODO find out how to use string lookups on Drawable resources
+                        int h=R.drawable.bullet;
+                        if(k=="tank"){
+                            h=R.drawable.tank;
+                        }
+                        //ro=new DotRenderObject();
+                        Drawable img = mContext.getResources().getDrawable(h);
+                        ro=new DrawableRenderObject(img);
                         m_renderObjects.put(k,ro);
                     }
                 }
@@ -163,7 +178,7 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
         super(context,attrs);
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
-        thread = new JPlayThread(holder); 
+        thread = new JPlayThread(holder,context); 
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
