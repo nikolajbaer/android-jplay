@@ -14,6 +14,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
 
 /* jbox2d */
 import org.jbox2d.common.Vec2;
@@ -46,8 +47,9 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
         /* game items */
         private Game m_game;
         public static final float PPM = 10.0f;
+        // TODO feed this from what is determined on creation
         private int m_gameWidth=320;
-        private int m_gameHeight=400;
+        private int m_gameHeight=350;
 
         public JPlayThread(SurfaceHolder surfaceHolder,Context context){
             mSurfaceHolder=surfaceHolder;
@@ -70,7 +72,7 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
             // Spread the players out in a ring 
             Vec2 mid=new Vec2(gwidth/2.0f,gheight/2.0f);
             Vec2 offset=new Vec2(gwidth/2*0.75f,0);
-            int np=6;//2; //6;
+            int np=2;//2; //6;
             for(int i=0;i<np;i++){
                 Body b=m_game.createRect(0.2f,-2.4f,-3.2f,4.8f,6.4f);
                 //Body b=m_game.createPolygon(1.0f, verts );
@@ -81,7 +83,7 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
                 b.setXForm( mid.add(rv) ,(float)(ra+Math.PI/2)); // i guess it goes from 0,1 not 1,0
                 PlayerObject po=new PlayerObject(b,verts);
     
-                if(false){ //i==0){ 
+                if(i==0){ 
                     m_game.addPlayer(new LivePlayer(po),true);
                 }else{
                     m_game.addPlayer(new HunterPlayer(po));
@@ -202,4 +204,7 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
         thread.setSurfaceSize(width, height);
     }
 
+    public boolean onTouchEvent(MotionEvent me){
+        return true;
+    }
 }
