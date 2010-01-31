@@ -1,18 +1,14 @@
 package com.nikolajbaer.androidrender;
 
 import android.view.Window;
+import android.view.View;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Button;
 
 public class JPlayActivity extends Activity
 {
-    private Button mForward;
-    private Button mReverse;
-    private Button mLeft;
-    private Button mRight;
-    private Button mFireA;
-    private Button mFireB;
+    private JPlayView mView;
 
     /** Called when the activity is first created. */
     @Override
@@ -22,12 +18,7 @@ public class JPlayActivity extends Activity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
 
-        mForward = (Button)findViewById(R.id.forwardButton);
-        mReverse = (Button)findViewById(R.id.reverseButton);
-        mLeft = (Button)findViewById(R.id.leftButton);
-        mRight = (Button)findViewById(R.id.rightButton);
-        mFireA = (Button)findViewById(R.id.fireAButton);
-        mFireB = (Button)findViewById(R.id.fireBButton);
+        mView = (JPlayView)findViewById(R.id.jplay);
 
     }
 }

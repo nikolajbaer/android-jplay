@@ -104,8 +104,13 @@ public abstract class GameObject implements Renderable {
         return v;
     }
 
-    public String getRenderKey(){ return "default"; }
+    public Vec2 getPosition(){
+        return m_body.getPosition();
+    }
 
+    // CONSIDER return string array. 
+    // then when rendering we can send relative position/angle of each component (e.g. tank turret)
+    public String getRenderKey(){ return "default"; }
 
     public RenderObject getRenderObject(){
         return m_renderObject;

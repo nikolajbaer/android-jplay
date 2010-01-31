@@ -6,42 +6,8 @@
     >
 <com.nikolajbaer.androidrender.JPlayView
       android:id="@+id/jplay"
-      android:layout_width="320px"
-      android:layout_height="350px"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
 />
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:stretchColumns="1">
-    <TableRow>
-<Button android:id="@+id/fireAButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Fire A" />
-<Button android:id="@+id/forwardButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Forward" />
-<Button android:id="@+id/fireBButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Fire B" />
-</TableRow>
-
-<TableRow>
-<Button android:id="@+id/leftButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Left" />
-<Button android:id="@+id/reverseButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Reverse" />
-<Button android:id="@+id/rightButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Right" />
-</TableRow>
-</TableLayout>
 </LinearLayout>
 

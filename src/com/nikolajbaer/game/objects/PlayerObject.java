@@ -23,8 +23,10 @@ public class PlayerObject extends PolygonGameObject {
     protected static final float SHIELD_RECHARGE_RATE = 0.1f;
     protected static float MAX_LIN_VEL=30.0f;
     protected static float MAX_ANG_VEL=8.0f;
+    protected static Float m_angleTarget; // if not null, rotate to this angle
 
     protected Weapon m_currentWeapon; // TODO make it have weapon ports
+    protected Vec2 m_target; // this is where the gun should point at
     protected static boolean m_isDead=false;
     
     public PlayerObject(Body b,float[] vertices){
@@ -33,6 +35,7 @@ public class PlayerObject extends PolygonGameObject {
         m_shields=SHIELD_MAX;
         m_energy=ENERGY_MAX;
         m_currentWeapon=new TankCannon();
+        m_angleTarget=null;
         //m_currentWeapon=new Blaster();
     }
 
@@ -100,6 +103,10 @@ public class PlayerObject extends PolygonGameObject {
         //thruster=-50.0f;
     }
 
+    public void rotateTo(float a){
+        m_angleTarget=a;
+    }
+
     public boolean tick(){
         // recharge energy and shields
         m_energy+=ENERGY_RECHARGE_RATE;
@@ -111,6 +118,18 @@ public class PlayerObject extends PolygonGameObject {
         m_currentWeapon.tick(this);
         //thrust(thruster);
         return true;
+    }
+
+    public void aim(GameObject g){
+        m_target=g.getPosition();
+    }
+
+    public void aim(Vec2 v){
+        m_target=new Vec2(v.x,v.y);
+    }
+
+    public void aim(float x,float y){
+        m_target=new Vec2(x,y);
     }
 
     public void triggerOn(){
@@ -162,6 +181,19 @@ public class PlayerObject extends PolygonGameObject {
     public float getHull(){ return m_hull; }
 
     public float getShields(){ return m_shields; }
+
+    /* getWeaponDir
+     * returns the direction we are pointing our weapon
+     *
+     */
+    // CONSIDER should this be configured per weapon? so fixed cannon vs. aimable missile, depends on game input style
+    public Vec2 getWeaponDir(){ 
+        if(m_target != null){
+            return m_target.sub(getPosition());
+        }else{
+            return getDir();
+        }
+    } 
 
     /* Draws energy from ship. Return the amount drawn (may be less than requested) */
     public float drawEnergy(int e){

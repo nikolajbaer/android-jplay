@@ -28,7 +28,8 @@ import com.nikolajbaer.Util;
 import com.nikolajbaer.game.*;
 import com.nikolajbaer.androidrender.R;
 
-class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
+
+public class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
     private JPlayThread thread;
 
     class JPlayThread extends Thread { 
@@ -100,6 +101,10 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
+        public void doKeys(int[] keys){
+            // TODO update internal key map
+        }
+
         @Override
         public void run() {
             int i=0;
@@ -109,6 +114,7 @@ class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
 
                 // tick then render
                 //Log.v(TAG, "ticking");
+                // TODO process key map for player actions
                 m_game.tick();                
 
                 try {
