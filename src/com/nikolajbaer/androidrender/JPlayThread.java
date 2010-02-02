@@ -48,6 +48,7 @@ public class JPlayThread extends Thread {
     // TODO feed this from what is determined on creation
     private int m_gameWidth=320;
     private int m_gameHeight=350;
+    private LivePlayer m_livePlayer;
     
     public JPlayThread(SurfaceHolder surfaceHolder,Context context){
         mSurfaceHolder=surfaceHolder;
@@ -82,7 +83,8 @@ public class JPlayThread extends Thread {
             PlayerObject po=new PlayerObject(b,verts);
     
             if(i==0){ 
-                m_game.addPlayer(new LivePlayer(po),true);
+                m_livePlayer=new LivePlayer(po);
+                m_game.addPlayer(m_livePlayer,true);
             }else{
                 m_game.addPlayer(new HunterPlayer(po));
             }
@@ -154,8 +156,8 @@ public class JPlayThread extends Thread {
                     //Drawable img = context.getResources().getDrawable(R.drawable.lander_crashed);
                     // TODO find out how to use string lookups on Drawable resources
                     int h=R.drawable.bullet;
-                    if(k=="tank"){
-                        h=R.drawable.tank;
+                    if(k=="tank2"){
+                        h=R.drawable.tank2;
                     }
                     //ro=new DotRenderObject();
                     Drawable img = mContext.getResources().getDrawable(h);
@@ -216,7 +218,7 @@ public class JPlayThread extends Thread {
     // incoming as screen coords
     public void setPlayerAim(float x,float y){
         synchronized(m_game){
-            //m_game.getPlayer().-
+            PlayerObject po=(PlayerObject)m_game.getPlayer();
         }
     }
     

@@ -72,8 +72,7 @@ public class PlayerObject extends PolygonGameObject {
         if(m_body==null){ return; }
         if(m==0){ return; }
         Vec2 lv=m_body.getLinearVelocity();
-        if(Math.abs(lv.length()) < MAX_LIN_VEL){
-            Vec2 bodyVec = m_body.getWorldCenter();
+        if(Math.abs(lv.length()) < MAX_LIN_VEL){ Vec2 bodyVec = m_body.getWorldCenter();
             Vec2 dir=getDir();
             m_body.applyForce(dir.mul(m),bodyVec);
         }
@@ -103,8 +102,8 @@ public class PlayerObject extends PolygonGameObject {
         //thruster=-50.0f;
     }
 
-    public void rotateTo(float a){
-        m_angleTarget=a;
+    public void rotateTo(float x,float y){
+        m_angleTarget=m_body.getAngle()+Util.angleTo(getDir(),new Vec2(x,y));
     }
 
     public boolean tick(){
@@ -116,6 +115,8 @@ public class PlayerObject extends PolygonGameObject {
         if(m_shields > SHIELD_MAX){ m_shields = SHIELD_MAX; } 
 
         m_currentWeapon.tick(this);
+        
+        //m_angleTarget
         //thrust(thruster);
         return true;
     }
@@ -217,6 +218,6 @@ public class PlayerObject extends PolygonGameObject {
         return m_currentWeapon.getVelocity(); 
     }
 
-    public String getRenderKey(){ return "tank"; }
+    public String getRenderKey(){ return "tank2"; }
 }
 
