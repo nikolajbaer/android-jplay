@@ -66,10 +66,17 @@ public class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v,MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
+                Log.v("Touchy","at "+event.getX()+","+event.getY());
+                if(event.getAction() == MotionEvent.ACTION_UP){
+                    Log.v("Touchy","at "+event.getX()+","+event.getY());
+                }
+                thread.setPlayerAim(event.getX(),event.getY());
+                //return gestureDetector.onTouchEvent(event);
+                return false;
             }
         });
 
+        // TODO add click listener, and drive tank toward click (for now)
         requestFocus();
     }
 
@@ -107,4 +114,5 @@ public class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    
 }

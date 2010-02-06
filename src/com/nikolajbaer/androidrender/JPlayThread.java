@@ -221,7 +221,14 @@ public class JPlayThread extends Thread {
             PlayerObject po=(PlayerObject)m_game.getPlayer();
         }
     }
-    
+ 
+    public void setPlayerMoveTo(float x,float y){
+        synchronized(m_game){
+            PlayerObject po=(PlayerObject)m_game.getPlayer();
+            po.rotateTo(toWorld(x),toWorld(y));
+        }
+    }
+   
 }
 
 

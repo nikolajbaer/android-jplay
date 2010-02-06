@@ -13,7 +13,7 @@ import com.nikolajbaer.game.weapons.*;
 import com.nikolajbaer.Util;
 
 public class PlayerObject extends PolygonGameObject {
-    protected float m_hull; // TODO make it shields + hull
+    protected float m_hull;
     protected float m_shields;
     protected float m_energy;
     protected static final float SHIELD_MAX = 10;

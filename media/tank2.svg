@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.47pre4 r22446"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="tank2.svg">
   <defs
      id="defs4">
     <linearGradient
@@ -43,15 +43,6 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 0.5 : 1"
        sodipodi:type="inkscape:persp3d" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3613"
-       id="linearGradient3619"
-       x1="216.65625"
-       y1="610.9375"
-       x2="646.21875"
-       y2="610.9375"
-       gradientUnits="userSpaceOnUse" />
     <inkscape:perspective
        id="perspective3637"
        inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
@@ -76,9 +67,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="-133.57143"
-     inkscape:cy="520"
+     inkscape:zoom="0.85192308"
+     inkscape:cx="271.4375"
+     inkscape:cy="418.56754"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -105,7 +96,10 @@
      id="layer1">
     <g
        id="g3655"
-       transform="translate(-40.000003,74.285713)">
+       transform="translate(-160,22.857141)"
+       inkscape:export-filename="/home/nikolaj/code/jplay/res/drawable/tank2.png"
+       inkscape:export-xdpi="9.6300001"
+       inkscape:export-ydpi="9.6300001">
       <path
          sodipodi:nodetypes="ccccccccccc"
          id="path2816"
@@ -118,7 +112,7 @@
       <path
          id="path3627"
          d="m 260,618.07647 c 11.42857,0 71.42857,25.71428 71.42857,25.71428 l 11.42857,-54.28571 -71.42857,-20 L 260,618.07647 z"
-         style="fill:#9a0b0b;fill-opacity:0.50431046;stroke:none" />
+         style="fill:#9a0b0b;fill-opacity:0.50431058;stroke:none" />
       <path
          id="path3621"
          d="M 391.42857,392.36218 420,440.93361 l -48.57143,17.14286 -85.71428,248.57143 42.85714,80 91.42857,48.57143 -14.28571,14.28571 -122.85715,-48.57143 -65.71428,-97.14286 140,-314.28571 34.28571,2.85714 z"
