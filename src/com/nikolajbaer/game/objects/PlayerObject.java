@@ -12,6 +12,9 @@ import com.nikolajbaer.game.Game;
 import com.nikolajbaer.game.weapons.*;
 import com.nikolajbaer.Util;
 
+// DEBUG
+import android.util.Log;
+
 public class PlayerObject extends PolygonGameObject {
     protected float m_hull;
     protected float m_shields;
@@ -22,8 +25,8 @@ public class PlayerObject extends PolygonGameObject {
     protected static final float ENERGY_RECHARGE_RATE = 1;
     protected static final float SHIELD_RECHARGE_RATE = 0.1f;
     protected static float MAX_LIN_VEL=30.0f;
-    protected static float MAX_ANG_VEL=8.0f;
-    protected static Float m_angleTarget; // if not null, rotate to this angle
+    protected static float MAX_ANG_VEL=3.0f;
+    protected static Vec2 m_angleTarget; // if not null, rotate to this angle
 
     protected Weapon m_currentWeapon; // TODO make it have weapon ports
     protected Vec2 m_target; // this is where the gun should point at
@@ -45,7 +48,7 @@ public class PlayerObject extends PolygonGameObject {
     public void left(){
         halt();
         if(m_body==null){ return; }
-        m_body.setAngularVelocity(-1.0f);
+        //m_body.setAngularVelocity(-1.0f);
         /*
         if(m_body.getAngularVelocity() > -MAX_ANG_VEL){
             m_body.applyTorque(-820.0f);
@@ -56,7 +59,7 @@ public class PlayerObject extends PolygonGameObject {
     public void right(){
         halt();
         if(m_body==null){ return; }
-        m_body.setAngularVelocity(1.0f);
+        //m_body.setAngularVelocity(1.0f);
         /*
         if(m_body.getAngularVelocity() < MAX_ANG_VEL){
             m_body.applyTorque(820.0f);
@@ -65,7 +68,7 @@ public class PlayerObject extends PolygonGameObject {
 
     public void stopRotate(){
         if(m_body==null){ return; }
-        m_body.setAngularVelocity(0.0f);
+        //m_body.setAngularVelocity(0.0f);
     }
 
     private void thrust(float m){
@@ -102,8 +105,9 @@ public class PlayerObject extends PolygonGameObject {
         //thruster=-50.0f;
     }
 
-    public void rotateTo(float x,float y){
-        m_angleTarget=m_body.getAngle()+Util.angleTo(getDir(),new Vec2(x,y));
+    public void rotateToPointAt(float x,float y){
+        m_angleTarget=new Vec2(x,y);
+        m_body.applyTorque(0.1f); // somehow the angular velocity must be initialized or something???
     }
 
     public boolean tick(){
@@ -115,8 +119,21 @@ public class PlayerObject extends PolygonGameObject {
         if(m_shields > SHIELD_MAX){ m_shields = SHIELD_MAX; } 
 
         m_currentWeapon.tick(this);
-        
-        //m_angleTarget
+      
+        if(m_angleTarget!=null){ 
+            float ta=getAngleToTarget(m_angleTarget); 
+            float ata=Math.abs(ta);
+            if( ata > MAX_ANG_VEL ){
+                m_body.setAngularVelocity(MAX_ANG_VEL * (ta/ta));
+            }else if(ata < 0.2){
+                // will this prevent us from being exact?
+                m_body.setAngularVelocity(0);
+                forward();
+            }else{
+                m_body.setAngularVelocity(ta); 
+            }
+        }
+
         //thrust(thruster);
         return true;
     }
@@ -219,5 +236,22 @@ public class PlayerObject extends PolygonGameObject {
     }
 
     public String getRenderKey(){ return "tank2"; }
+
+    public Vec2 getDirVec(){
+        return Util.rotate(new Vec2(0,-1),m_body.getAngle());
+    }
+
+    public float getAngleToTarget(Vec2 t){
+        Vec2 d=t.sub(m_body.getPosition());
+        return Vec2.cross(d,getDirVec());
+    }
+
+    // TEMP
+    public float getAngleTarget(){
+        if(m_angleTarget!=null){
+            return getAngleToTarget(m_angleTarget);
+        }
+        return 0;
+    }
 }
 

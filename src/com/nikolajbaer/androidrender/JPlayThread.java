@@ -71,7 +71,7 @@ public class JPlayThread extends Thread {
         // Spread the players out in a ring 
         Vec2 mid=new Vec2(gwidth/2.0f,gheight/2.0f);
         Vec2 offset=new Vec2(gwidth/2*0.75f,0);
-        int np=2;//2; //6;
+        int np=1;//2; //6;
         for(int i=0;i<np;i++){
             Body b=m_game.createRect(0.2f,-2.4f,-3.2f,4.8f,6.4f);
             //Body b=m_game.createPolygon(1.0f, verts );
@@ -118,7 +118,9 @@ public class JPlayThread extends Thread {
             synchronized(m_game){
                 m_game.tick();
             }
-    
+   
+            //Log.v("status","player object target: "+((PlayerObject)m_game.getPlayer()).getAngleTarget());
+ 
             try {
                 c = mSurfaceHolder.lockCanvas(null);
                 synchronized (mSurfaceHolder) {
@@ -225,7 +227,7 @@ public class JPlayThread extends Thread {
     public void setPlayerMoveTo(float x,float y){
         synchronized(m_game){
             PlayerObject po=(PlayerObject)m_game.getPlayer();
-            po.rotateTo(toWorld(x),toWorld(y));
+            po.rotateToPointAt(toWorld(x),toWorld(y));
         }
     }
    
