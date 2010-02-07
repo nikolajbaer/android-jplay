@@ -13,7 +13,7 @@ import com.nikolajbaer.game.weapons.*;
 import com.nikolajbaer.Util;
 
 // DEBUG
-import android.util.Log;
+//import android.util.Log;
 
 public class PlayerObject extends PolygonGameObject {
     protected float m_hull;
