@@ -158,7 +158,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
                     // that i can override for each render lib
                     System.out.println("Building a "+k+" Render Object");
                     //ro=new PolygonRenderObject();
-                    ro=new PNGRenderObject("media/"+k+".png");
+                    ro=new PNGRenderObject("res/drawable/"+k+".png");
                     m_renderObjects.put(k,ro);
                 }
                 r.setRenderObject(ro);

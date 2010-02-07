@@ -24,7 +24,7 @@
 
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>
-        <jar destfile="build/jar/JPlay.jar" basedir="${classes.dir}">
+        <jar destfile="${build.dir}/jar/JPlay.jar" basedir="${classes.dir}">
             <manifest>
                 <attribute name="Main-Class" value="%{main-class}"/>
             </manifest>
