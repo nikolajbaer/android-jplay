@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.*;
-import java.awt.event.KeyEvent;
 import java.awt.geom.*;
 
 /* local */
@@ -65,6 +64,16 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             }
             public void keyTyped(KeyEvent e){}
         });
+    
+        addMouseListener(new MouseListener(){
+            public void mouseClicked(MouseEvent e){
+                m_game.getPlayer().rotateToPointAt(toWorld(e.getX()),toWorld(e.getY()));
+            }
+            public void mouseExited(MouseEvent e){ }
+            public void mouseReleased(MouseEvent e){ }
+            public void mouseEntered(MouseEvent e){ }
+            public void mousePressed(MouseEvent e){ }
+        });
 
         // Add Players
         float[] verts={-2.4f,3.2f,-2.4f,-3.2f,2.4f,-3.2f,2.4f,3.2f};
@@ -97,6 +106,9 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
     }
 
     private void processKeyActions(){
+        // TODO be smarter about end-game state
+        if(m_game.getPlayer().getBody()==null){ return; }
+
         if(getKey(KeyEvent.VK_SPACE)){
             m_game.getPlayer().triggerOn();
         }else{
@@ -177,4 +189,34 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         g.drawImage( m_backBuffer, 5,25, null );
         g.dispose();
     }    
+
+    /* Convert world/screen */
+    private float[] toWorld(float[] n){
+        if(n==null){ return null; }
+        float[] r=new float[n.length];
+        for(int i=0;i<n.length;i++){
+            r[i]=toWorld(n[i]);
+        }
+        return r;
+    }
+
+    private float[] toScreen(float[] n){
+        if(n==null){ return null; }
+        float[] r=new float[n.length];
+        for(int i=0;i<n.length;i++){
+            r[i]=toWorld(n[i]);
+        }
+        return r;
+    }
+
+    private float toWorld(int n){ return toWorld((float)n); }
+
+    private float toWorld(float n){
+        return n/PPM;
+    }
+
+    private float toScreen(float n){
+        return n*PPM;
+    }
+
 }

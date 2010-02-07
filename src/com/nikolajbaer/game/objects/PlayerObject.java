@@ -39,6 +39,7 @@ public class PlayerObject extends PolygonGameObject {
         m_energy=ENERGY_MAX;
         m_currentWeapon=new TankCannon();
         m_angleTarget=null;
+        b.allowSleeping(false);
         //m_currentWeapon=new Blaster();
     }
 
@@ -107,7 +108,8 @@ public class PlayerObject extends PolygonGameObject {
 
     public void rotateToPointAt(float x,float y){
         m_angleTarget=new Vec2(x,y);
-        m_body.applyTorque(0.1f); // somehow the angular velocity must be initialized or something???
+        //m_body.applyTorque(0.1f); // somehow the angular velocity must be initialized or something???
+        m_body.wakeUp();
     }
 
     public boolean tick(){
