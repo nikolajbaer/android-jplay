@@ -3,6 +3,12 @@ package com.nikolajbaer.awtrender;
 /* java */
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /* jbox2d */
 import org.jbox2d.common.Vec2;
@@ -81,7 +87,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         // Spread the players out in a ring 
         Vec2 mid=new Vec2(gwidth/2.0f,gheight/2.0f);
         Vec2 offset=new Vec2(gwidth/2*0.75f,0);
-        int np=2; //6;
+        int np=1; //6;
         for(int i=0;i<np;i++){
             Body b=m_game.createRect(0.2f,-2.4f,-3.2f,4.8f,6.4f);
             //Body b=m_game.createPolygon(1.0f, verts );
@@ -130,6 +136,42 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
                 m_game.getPlayer().halt();
             } 
         }
+        // Read from accelerometer
+        // CONSIDER would need to adjust for starting position on phone..
+        float[] accel=readAccel();
+        //System.out.println("aX: "+accel[0]);
+        //System.out.println("aY: "+accel[1]);
+    }
+
+    // Use this to help develop phone-like control system
+    private float[] readAccel(){
+        // never understood why there can't be some simpler defaults for java..
+        File file = new File("/sys/devices/platform/hdaps/position");
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        DataInputStream dis = null;
+        float x=0;
+        float y=0;
+        try {
+            fis = new FileInputStream(file);
+            dis = new DataInputStream(fis);
+            String l=dis.readLine();
+            l=l.replace("(","").replace(")","");
+            String[] tokens = l.split(",");
+            // 0 - flat is -500, goes from ~-600 left to -300 right down
+            // 1 - flat is 500, goes from 600 tipped forward to 300 tipped back
+            x=(Float.parseFloat(tokens[0])+500)/150.0f;
+            y=(Float.parseFloat(tokens[1])-500)/150.0f;
+            // Now x is left/right, with left full as -150, right full as 150
+            // y is front/back with tipped forward full as -150, back full is 150
+            fis.close();
+            dis.close();
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        return new float[]{x,y};
     }
 
     public void actionPerformed(ActionEvent e) {
