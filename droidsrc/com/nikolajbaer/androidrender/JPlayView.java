@@ -66,11 +66,11 @@ public class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v,MotionEvent event) {
-                Log.v("Touchy","at "+event.getX()+","+event.getY());
+                //Log.v("Touchy","at "+event.getX()+","+event.getY());
                 if(event.getAction() == MotionEvent.ACTION_UP){
                     //Log.v("Touchy","at "+event.getX()+","+event.getY());
                 }
-                thread.setPlayerMoveTo(event.getX(),event.getY());
+                //thread.setPlayerMoveTo(event.getX(),event.getY());
                 //return gestureDetector.onTouchEvent(event);
                 return false;
             }
@@ -99,11 +99,16 @@ public class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void processFling(float vx,float vy){
         Log.v("Gesture","on fling "+vx+"x"+vy);
-        thread.setPlayerAim(vx,vy);
+        //thread.setPlayerAim(vx,vy);
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         thread.setSurfaceSize(width, height);
+    }
+
+    public void applyTilt(float x,float y){
+        // x is reversed
+        thread.processPlayerDirection(-x,y);
     }
 
     class JPlayGestureDetector extends SimpleOnGestureListener {

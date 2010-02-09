@@ -17,7 +17,7 @@ import android.hardware.SensorEvent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.content.Context;
-
+import android.content.pm.ActivityInfo;
 
 public class JPlayActivity extends Activity
 {
@@ -31,6 +31,7 @@ public class JPlayActivity extends Activity
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mView = (JPlayView)findViewById(R.id.jplay);
 
@@ -39,7 +40,7 @@ public class JPlayActivity extends Activity
         // TODO handle phones without accelerometers
         mSensorManager=(SensorManager)getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(listener,
-                                        mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                                        mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                                         SensorManager.SENSOR_DELAY_GAME);
 
     }
@@ -52,9 +53,12 @@ public class JPlayActivity extends Activity
 
     private SensorEventListener listener=new SensorEventListener() {
         public void onSensorChanged(SensorEvent e) {
-            if (e.sensor.getType()==Sensor.TYPE_ACCELEROMETER) {
-                Log.v("Sensors","Got "+e.values[0]+","+e.values[1]);
-            }
+            //Log.v("MySensors","Got "+e.values[0]+" and "+e.values[1]);
+            float x=e.values[0]/5.0f;
+            float y=e.values[1]/5.0f;
+            if(x>1.0f){ x=1.0f; }else if(x<-1.0f){ x=-1.0f; }
+            if(y>1.0f){ y=1.0f; }else if(y<-1.0f){ y=-1.0f; }
+            mView.applyTilt(x,y);
         }
  
         public void onAccuracyChanged(Sensor sensor, int accuracy) {

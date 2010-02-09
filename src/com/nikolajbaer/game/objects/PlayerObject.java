@@ -12,9 +12,7 @@ import com.nikolajbaer.game.Game;
 import com.nikolajbaer.game.weapons.*;
 import com.nikolajbaer.Util;
 
-// DEBUG
-//import android.util.Log;
-
+// CONSIDER this could be more abstract as a ControllableGameObject
 public class PlayerObject extends PolygonGameObject {
     protected float m_hull;
     protected float m_shields;
@@ -87,22 +85,18 @@ public class PlayerObject extends PolygonGameObject {
         thruster=0.0f;
     }
 
+    public void setThrottle(float mag){
+        if(mag >1.0){ mag=1.0f; }
+        else if(mag < 1.0f){ mag=1.0f; }
+        thruster=mag*30.0f;
+    }
+
     public void forward(){
-        //stopRotate();
-        //Vec2 d=getDir().mul(8.0f);
-        //System.out.println(this+" going forward"+ d);
-        //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
-        //m_body.setLinearVelocity(d);
-        thruster=25.0f;
+        setThrottle(1.0f);
     }
 
     public void reverse(){
-        //stopRotate();
-        //Vec2 d=getDir().mul(-8.0f);
-        //System.out.println(this+" going in reverse "+d);
-        //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
-        //m_body.setLinearVelocity(d);
-        thruster=-50.0f;
+        setThrottle(-1.0f);
     }
 
     public void rotateToPointAt(float x,float y){

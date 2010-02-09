@@ -102,7 +102,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             if(i==0){ 
                 m_game.addPlayer(new LivePlayer(po),true);
             }else{
-                m_game.addPlayer(new HunterPlayer(po));
+                m_game.addPlayer(new LambPlayer(po));
             }
         }
     }
@@ -148,12 +148,14 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         Vec2 d=m_game.getPlayer().getDir();
         float a=Vec2.cross(i,d);
         //System.out.println("applying torque "+a);
-        if(Math.abs(a)<0.2){ 
+        if(i.length()>0.3){ 
             if(Vec2.dot(i,d) < 0){
                 //m_game.getPlayer().reverse();
             }else{
-                m_game.getPlayer().forward();
+                m_game.getPlayer().setThrottle(i.length());
             }
+        }else{ 
+            m_game.getPlayer().halt();
         }
         //m_game.getPlayer().forward();
 

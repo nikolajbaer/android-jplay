@@ -34,15 +34,20 @@ public class TankCannon extends Weapon {
             if(shooter.getEnergy() > 10){
                 shooter.drawEnergy(20);
                 // TODO make it so the shooter can't get hit by their own bullets?
+                Body shootb=shooter.getBody();
                 Vec2 d=shooter.getDir();
                 Body b=Game.game.createCircle(1.0f,0.3f);
                 BulletObject bo=new BulletObject(b,10);
-                b.setXForm(shooter.getBody().getWorldCenter().add(d.mul(4)),shooter.getBody().getAngle());
+                b.setXForm(shootb.getWorldCenter().add(d.mul(4)),shootb.getAngle());
                 b.setBullet(true);
-                b.setLinearVelocity(d.mul(m_bulletVelocity).add(shooter.getBody().getLinearVelocity()));
+                b.setLinearVelocity(d.mul(m_bulletVelocity).add(shootb.getLinearVelocity()));
                 // TODO drain energy usage from game object if this is a beam weapon
                 shooter.emitGameObject(bo); 
+                // TODO set bullet source!
+                // CONSIDER maybe use box2d collision filter?
                 m_reloadCount=0;
+                // Apply kickback
+                shootb.applyImpulse(d.mul(-5.0f),shootb.getPosition());
             }else{
                 System.out.println("insufficient power, tank stall..");
             }
