@@ -1,4 +1,4 @@
-package com.nikolajbaer.game;
+package com.nikolajbaer.game.players;
 
 /* java */
 import java.lang.Math;

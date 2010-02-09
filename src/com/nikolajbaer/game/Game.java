@@ -17,6 +17,7 @@ import org.jbox2d.dynamics.contacts.*;
 import com.nikolajbaer.game.objects.*;
 import com.nikolajbaer.Util;
 import com.nikolajbaer.render.Renderable;
+import com.nikolajbaer.game.players.*;
 
 // CONSIDER phsyics should be refactored into its own engine
 public class Game implements GameObjectEventListener,ContactListener {

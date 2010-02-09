@@ -12,7 +12,7 @@
     </path>
 
     <target name="clean">
-        <delete dir="build"/>
+        <delete dir="${build.dir}"/>
     </target>
 
     <target name="compile">

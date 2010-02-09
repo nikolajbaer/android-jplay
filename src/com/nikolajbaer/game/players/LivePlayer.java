@@ -1,4 +1,4 @@
-package com.nikolajbaer.game;
+package com.nikolajbaer.game.players;
 
 /* local */
 import com.nikolajbaer.game.objects.*;

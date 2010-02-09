@@ -27,6 +27,7 @@ import com.nikolajbaer.render.RenderObject;
 import com.nikolajbaer.game.objects.*;
 import com.nikolajbaer.Util;
 import com.nikolajbaer.game.*;
+import com.nikolajbaer.game.players.*;
 
 public class JPlay extends JFrame implements ActionListener { //implements Runnable{
     private Game m_game;

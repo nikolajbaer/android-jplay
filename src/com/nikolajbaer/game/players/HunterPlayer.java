@@ -1,4 +1,4 @@
-package com.nikolajbaer.game;
+package com.nikolajbaer.game.players;
 
 
 /* java */
@@ -10,6 +10,7 @@ import org.jbox2d.common.Vec2;
 
 /* local */
 import com.nikolajbaer.game.objects.*;
+import com.nikolajbaer.game.Game;
 import com.nikolajbaer.Util;
 
 public class HunterPlayer extends GamePlayer {
@@ -90,64 +91,72 @@ public class HunterPlayer extends GamePlayer {
         if( !m_playerObject.isAlive() ){ return; }
         switch(m_state){
             case HUNTING:
-                // look for a target
-                GameObject t=acquireTarget();
-                // if target acquired, set and move to attacking
-                if(t!=null){
-                    System.out.println("target acquired: "+t);
-                    m_target=t;
-                    m_state=ATTACKING;
-                }else{
-                    // TODO check if we are on a collision course, and slow
-                    // down and veer
-                    // otherwise go forward
-                    m_playerObject.forward();
-                    double r=Math.random();
-                    if( r < -0.05){ 
-                        m_playerObject.left();
-                    }else if(r > 0.05){
-                         m_playerObject.right();
-                    }else{ /* go straight */ }
-                }
-                // else move forward and randomly left or right
+                doHunt();
                 break;
             case ATTACKING:
-                // HACK should i bet targeting game object? how do i efficiently know if it is still around?
-                if( m_target.getBody() == null){
-                    m_playerObject.triggerOff();
-                    m_playerObject.stopRotate();
-                    System.out.println("target dead, hunting..");
-                    m_state=HUNTING;
-                    break; // is this dirty?
-                }
-
-                // is target destroyed? switch to hunting, else
-                // aim at target (left or right to minimize angle)
-                // if angle < min, shoot 
-                //float a=getAngleToTarget();
-                //System.out.println("Homing: "+a+", "+getDirectionOfTarget());
-                float a=getDirectionOfTarget();
-                // TODO need to make this focus on visible cross section of tank with velocity prediciton
-                // TODO perhaps add debugging visual overlays? so easier to see what tank is thinking
-                // TODO stop shooting if target is dead
-                if(a > 0.1){ 
-                    m_playerObject.triggerOff();
-                    m_playerObject.left(); 
-                }else if(a < -0.1){ 
-                    m_playerObject.triggerOff();
-                    m_playerObject.right(); 
-                }else{
-                    m_playerObject.stopRotate();
-                    m_playerObject.triggerOn();
-                    if(m_targetVector.length()>20){
-                        m_playerObject.forward();
-                    }else if(m_targetVector.length() < 5){
-                        m_playerObject.reverse();
-                    }else{
-                        m_playerObject.halt();
-                    }
-                }
+                doAttack();
                 break;
         }
     } 
+
+    protected void doAttack(){
+        // HACK should i bet targeting game object? how do i efficiently know if it is still around?
+        if( m_target.getBody() == null){
+            m_playerObject.triggerOff();
+            m_playerObject.stopRotate();
+            System.out.println("target dead, hunting..");
+            m_state=HUNTING;
+            return; // is this dirty?
+        }
+
+        // is target destroyed? switch to hunting, else
+        // aim at target (left or right to minimize angle)
+        // if angle < min, shoot 
+        //float a=getAngleToTarget();
+        //System.out.println("Homing: "+a+", "+getDirectionOfTarget());
+        float a=getDirectionOfTarget();
+        // TODO need to make this focus on visible cross section of tank with velocity prediciton
+        // TODO perhaps add debugging visual overlays? so easier to see what tank is thinking
+        // TODO stop shooting if target is dead
+        if(a > 0.1){ 
+            m_playerObject.triggerOff();
+            m_playerObject.left(); 
+        }else if(a < -0.1){ 
+            m_playerObject.triggerOff();
+            m_playerObject.right(); 
+        }else{
+            m_playerObject.stopRotate();
+            m_playerObject.triggerOn();
+            if(m_targetVector.length()>20){
+                m_playerObject.forward();
+            }else if(m_targetVector.length() < 5){
+                m_playerObject.reverse();
+            }else{
+                m_playerObject.halt();
+            }
+        }
+    }
+
+    protected void doHunt(){
+        // look for a target
+        GameObject t=acquireTarget();
+        // if target acquired, set and move to attacking
+        if(t!=null){
+            System.out.println("target acquired: "+t);
+            m_target=t;
+            m_state=ATTACKING;
+        }else{
+            // TODO check if we are on a collision course, and slow
+            // down and veer
+            // otherwise go forward
+            m_playerObject.forward();
+            double r=Math.random();
+            if( r < -0.05){ 
+                m_playerObject.left();
+            }else if(r > 0.05){
+                 m_playerObject.right();
+            }else{ /* go straight */ }
+        }
+        // else move forward and randomly left or right
+    }
 }
