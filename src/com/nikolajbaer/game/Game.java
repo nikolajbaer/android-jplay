@@ -128,7 +128,8 @@ public class Game implements GameObjectEventListener,ContactListener {
         // create the body def and body
         BodyDef bd = new BodyDef();
         bd.isBullet=false;
-        bd.linearDamping=0.1f;
+        bd.linearDamping=0.5f;
+        bd.angularDamping=0.9f;
         Body b=m_world.createBody(bd);
         b.createShape(pd);
         b.setMassFromShapes();

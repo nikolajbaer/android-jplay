@@ -40,6 +40,7 @@ public class PlayerObject extends PolygonGameObject {
         m_currentWeapon=new TankCannon();
         m_angleTarget=null;
         b.allowSleeping(false);
+        //b.angularDamping=0.9f;
         //m_currentWeapon=new Blaster();
     }
 
@@ -47,24 +48,22 @@ public class PlayerObject extends PolygonGameObject {
     // e.g. shields down, hull level critical, cannon reloading stalled
 
     public void left(){
-        halt();
+        //halt();
         if(m_body==null){ return; }
-        m_body.setAngularVelocity(-1.0f);
-        /*
+        //m_body.setAngularVelocity(-1.0f);
         if(m_body.getAngularVelocity() > -MAX_ANG_VEL){
             m_body.applyTorque(-820.0f);
-        }*/
+        }
     }
    
     // TODO make this more natural 
     public void right(){
-        halt();
+        //halt();
         if(m_body==null){ return; }
-        m_body.setAngularVelocity(1.0f);
-        /*
+        //m_body.setAngularVelocity(1.0f);
         if(m_body.getAngularVelocity() < MAX_ANG_VEL){
             m_body.applyTorque(820.0f);
-        }*/
+        }
     }
 
     public void stopRotate(){
@@ -84,26 +83,26 @@ public class PlayerObject extends PolygonGameObject {
 
     public void halt(){
         //System.out.println(this+" halting");
-        m_body.setLinearVelocity(new Vec2(0.0f,0.0f));
+        //m_body.setLinearVelocity(new Vec2(0.0f,0.0f));
         thruster=0.0f;
     }
 
     public void forward(){
-        stopRotate();
-        Vec2 d=getDir().mul(8.0f);
+        //stopRotate();
+        //Vec2 d=getDir().mul(8.0f);
         //System.out.println(this+" going forward"+ d);
         //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
-        m_body.setLinearVelocity(d);
-        //thruster=65.0f;
+        //m_body.setLinearVelocity(d);
+        thruster=25.0f;
     }
 
     public void reverse(){
-        stopRotate();
-        Vec2 d=getDir().mul(-8.0f);
+        //stopRotate();
+        //Vec2 d=getDir().mul(-8.0f);
         //System.out.println(this+" going in reverse "+d);
         //System.out.println("changing linear velcity from "+m_body.getLinearVelocity()+" to "+d);
-        m_body.setLinearVelocity(d);
-        //thruster=-50.0f;
+        //m_body.setLinearVelocity(d);
+        thruster=-50.0f;
     }
 
     public void rotateToPointAt(float x,float y){
@@ -136,7 +135,7 @@ public class PlayerObject extends PolygonGameObject {
             }
         }
 
-        //thrust(thruster);
+        thrust(thruster);
         return true;
     }
 

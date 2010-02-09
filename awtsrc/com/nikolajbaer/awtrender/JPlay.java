@@ -87,7 +87,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         // Spread the players out in a ring 
         Vec2 mid=new Vec2(gwidth/2.0f,gheight/2.0f);
         Vec2 offset=new Vec2(gwidth/2*0.75f,0);
-        int np=1; //6;
+        int np=2; //6;
         for(int i=0;i<np;i++){
             Body b=m_game.createRect(0.2f,-2.4f,-3.2f,4.8f,6.4f);
             //Body b=m_game.createPolygon(1.0f, verts );
@@ -122,6 +122,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         }
 
         // Tank like handling
+        /*
         if(getKey(KeyEvent.VK_LEFT)){
             m_game.getPlayer().left();
         }else if(getKey(KeyEvent.VK_RIGHT)){
@@ -136,11 +137,29 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
                 m_game.getPlayer().halt();
             } 
         }
+        */
         // Read from accelerometer
         // CONSIDER would need to adjust for starting position on phone..
         float[] accel=readAccel();
-        //System.out.println("aX: "+accel[0]);
-        //System.out.println("aY: "+accel[1]);
+        float x=accel[0];
+        float y=accel[1]; 
+        Vec2 i=new Vec2(x,y);
+        Vec2 d=m_game.getPlayer().getDir();
+        float a=Vec2.cross(i,d);
+        //System.out.println("applying torque "+a);
+        if(Math.abs(a)<0.2){ 
+            if(Vec2.dot(i,d) < 0){
+                //m_game.getPlayer().reverse();
+            }else{
+                m_game.getPlayer().forward();
+            }
+        }
+        //m_game.getPlayer().forward();
+
+        Body b=m_game.getPlayer().getBody();
+        b.wakeUp();
+        b.applyTorque(a*-400);
+
     }
 
     // Use this to help develop phone-like control system
