@@ -69,6 +69,11 @@ public class JPlayView extends SurfaceView implements SurfaceHolder.Callback {
                 //Log.v("Touchy","at "+event.getX()+","+event.getY());
                 if(event.getAction() == MotionEvent.ACTION_UP){
                     //Log.v("Touchy","at "+event.getX()+","+event.getY());
+                    thread.zoomIn();
+                }
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    //Log.v("Touchy","at "+event.getX()+","+event.getY());
+                    thread.zoomOut();
                 }
                 //thread.setPlayerMoveTo(event.getX(),event.getY());
                 //return gestureDetector.onTouchEvent(event);

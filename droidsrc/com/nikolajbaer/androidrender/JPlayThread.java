@@ -14,6 +14,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.view.MotionEvent;
 
 /* jbox2d */
@@ -36,6 +38,7 @@ public class JPlayThread extends Thread {
     private boolean mRun;
     private RectF mScreenRect;
     private Paint mClearPaint;
+    private Paint mGameAreaPaint;
     private SurfaceHolder mSurfaceHolder;
     private Context mContext;
     
@@ -50,6 +53,10 @@ public class JPlayThread extends Thread {
     private int m_gameWidth=320;
     private int m_gameHeight=350;
     private LivePlayer m_livePlayer;
+    private Vec2 m_playerPos;
+    private float m_playerAngle;
+    private float m_zoom=1.0f;
+    private float m_zoom2=0.5f;
    
     // TODO split into game thread and render thread 
     public JPlayThread(SurfaceHolder surfaceHolder,Context context){
@@ -57,14 +64,17 @@ public class JPlayThread extends Thread {
         mContext = context;
         mRun=true;
         mClearPaint = new Paint();
-        mClearPaint.setARGB(255,  0, 0, 0);
+        mClearPaint.setARGB(255,  20, 20, 20);
+        mGameAreaPaint = new Paint();
+        mGameAreaPaint.setARGB(255,  0,0 ,0);
+        
         mScreenRect = new RectF(0,0,0,0);
     
         // init game
         m_renderObjects=new HashMap<String,AndroidRenderObject>();
         int gwidth=(int)(toWorld(m_gameWidth));
         int gheight=(int)(toWorld(m_gameHeight));
-        m_game=new Game(gwidth,gheight);
+        m_game=new Game(gwidth*2,gheight*2);
         Game.game=m_game;
     
         // Add Players
@@ -143,6 +153,26 @@ public class JPlayThread extends Thread {
     private void doDraw(Canvas c){
         // TODO do dirty rect drawing
         c.drawRect(mScreenRect,mClearPaint);
+
+        //retreive player position
+        if(m_game.getPlayer().getBody()!=null){
+            Body pb=m_game.getPlayer().getBody();
+            m_playerPos=toScreen(pb.getPosition());
+            m_playerAngle=pb.getAngle();
+        }
+
+        // Transform around player
+        c.save();
+        c.translate(m_gameWidth/2,m_gameHeight/2);
+        // TODO make this zoom out on touch 
+        if(m_zoom!=1.0){
+            c.scale(m_zoom,m_zoom);
+        } 
+        c.rotate((float)Math.toDegrees(-m_playerAngle));
+        c.translate(-m_playerPos.x,-m_playerPos.y);
+
+        // TODO define game area
+        c.drawRect(0,0,m_gameWidth*2,m_gameHeight*2,mGameAreaPaint);
     
         ArrayList<Renderable> renderables=m_game.getRenderables();
         //Log.v(TAG, "rendering "+renderables.size()+" objects");
@@ -174,6 +204,7 @@ public class JPlayThread extends Thread {
             ro.setPixelRatio(PPM);
             ro.renderFromWorld(wt[0],wt[1],wt[2]);
         }
+        c.restore();
     }
     
     public void setRunning(boolean b) {
@@ -203,8 +234,16 @@ public class JPlayThread extends Thread {
         return n/PPM;
     }
 
+    private Vec2 toWorld(Vec2 v){
+        return new Vec2(toWorld(v.x),toWorld(v.y));
+    }
+
     private float toScreen(float n){
         return n*PPM;
+    }
+
+    private Vec2 toScreen(Vec2 v){
+        return new Vec2(toScreen(v.x),toScreen(v.y));
     }
     
     public void triggerOn(){
@@ -236,6 +275,7 @@ public class JPlayThread extends Thread {
     // use this to direct the player at the vec (x,y).. with accelerometer/orientation
     public void processPlayerDirection(float x,float y){
         synchronized(m_game){
+            /*
             Vec2 i=new Vec2(x,y);
             Vec2 d=m_game.getPlayer().getDir();
             float a=Vec2.cross(i,d);
@@ -254,7 +294,28 @@ public class JPlayThread extends Thread {
             Body b=m_game.getPlayer().getBody();
             b.wakeUp();
             b.applyTorque(a*-400);
+            */
+            float thresh=0.5f;
+            if(x > thresh){
+                m_game.getPlayer().right();
+            }else if(x < -thresh){
+                m_game.getPlayer().left();
+            }
+            if(y > thresh ){
+                m_game.getPlayer().forward();
+            }else if(y < -thresh){
+                m_game.getPlayer().reverse();
+            }
+    
         } 
+    }
+    
+    public void zoomOut(){
+        m_zoom=0.5f;
+    }
+
+    public void zoomIn(){
+        m_zoom=1.0f;
     }
 }
 

@@ -23,7 +23,7 @@ public class PlayerObject extends PolygonGameObject {
     protected static final float ENERGY_RECHARGE_RATE = 1;
     protected static final float SHIELD_RECHARGE_RATE = 0.1f;
     protected static float MAX_LIN_VEL=30.0f;
-    protected static float MAX_ANG_VEL=3.0f;
+    protected static float MAX_ANG_VEL=1.0f;
     protected static Vec2 m_angleTarget; // if not null, rotate to this angle
 
     protected Weapon m_currentWeapon; // TODO make it have weapon ports
@@ -50,7 +50,7 @@ public class PlayerObject extends PolygonGameObject {
         if(m_body==null){ return; }
         //m_body.setAngularVelocity(-1.0f);
         if(m_body.getAngularVelocity() > -MAX_ANG_VEL){
-            m_body.applyTorque(-420.0f);
+            m_body.applyTorque(-220.0f);
         }
     }
    
@@ -60,7 +60,7 @@ public class PlayerObject extends PolygonGameObject {
         if(m_body==null){ return; }
         //m_body.setAngularVelocity(1.0f);
         if(m_body.getAngularVelocity() < MAX_ANG_VEL){
-            m_body.applyTorque(420.0f);
+            m_body.applyTorque(220.0f);
         }
     }
 
