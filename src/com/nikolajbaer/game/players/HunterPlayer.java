@@ -22,10 +22,18 @@ public class HunterPlayer extends GamePlayer {
 
     private Vec2 m_targetVector;
     private Vec2 m_targetProjectedPosition;
+    private float m_skill;
+
+    public HunterPlayer(PlayerObject go,float skill){
+        super(go);
+        m_state=HUNTING;
+        m_skill=skill;
+    }
 
     public HunterPlayer(PlayerObject go){
         super(go);
         m_state=HUNTING;
+        m_skill=0; // perfect skill
     }
 
     private GameObject acquireTarget(){
@@ -82,6 +90,12 @@ public class HunterPlayer extends GamePlayer {
         Vec2 d2 = np.sub(m_playerObject.getBody().getPosition());
         m_targetVector=d2;
 
+        // account for skill.. or rahter disrupt for incompetence
+        if(m_skill>0){
+            m_targetVector=m_targetVector.add(new Vec2(
+                (float)(Math.random()*m_skill),
+                (float)(Math.random()*m_skill)));
+        } 
         // and fire at where they will be
         return Vec2.cross(d2,lv);
     }

@@ -41,6 +41,10 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
     public static final float PPM = 10.0f;
     private int m_gameWidth=400;
     private int m_gameHeight=600;
+    private double m_zoom=1.0;
+    private double m_zoom2=0.5;
+    private float m_playerAngle;
+    private Vec2 m_playerPos;
 
     public JPlay(String name){
         super(name);
@@ -53,7 +57,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         //m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int gwidth=(int)(m_gameWidth/PPM);
         int gheight=(int)(m_gameHeight/PPM);
-        m_game=new Game(gwidth,gheight); // game is in meters
+        m_game=new Game(gwidth*4,gheight*4); // game is in meters
         Game.game=m_game;
         m_timer = new Timer(1000/40,this);
         m_timer.setInitialDelay(500);
@@ -74,7 +78,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
     
         addMouseListener(new MouseListener(){
             public void mouseClicked(MouseEvent e){
-                m_game.getPlayer().rotateToPointAt(toWorld(e.getX()),toWorld(e.getY()));
+                //m_game.getPlayer().rotateToPointAt(toWorld(e.getX()),toWorld(e.getY()));
             }
             public void mouseExited(MouseEvent e){ }
             public void mouseReleased(MouseEvent e){ }
@@ -102,7 +106,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             if(i==0){ 
                 m_game.addPlayer(new LivePlayer(po),true);
             }else{
-                m_game.addPlayer(new LambPlayer(po));
+                m_game.addPlayer(new HunterPlayer(po,10));
             }
         }
     }
@@ -122,29 +126,54 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             m_game.getPlayer().triggerOff();
         }
 
-        // Tank like handling
-        /*
+        // zoomer hotkey
+        if(getKey(KeyEvent.VK_SHIFT)){
+            if(m_zoom>m_zoom2){ 
+                m_zoom-=0.1;
+            }else{
+                m_zoom=m_zoom2;
+            }
+        }else{
+            if(m_zoom<1.0){ 
+                m_zoom+=0.1;
+            }else{
+                m_zoom=1.0;
+            }
+        }
+
         if(getKey(KeyEvent.VK_LEFT)){
             m_game.getPlayer().left();
         }else if(getKey(KeyEvent.VK_RIGHT)){
             m_game.getPlayer().right();
-        }else{
-            m_game.getPlayer().stopRotate();
-            if(getKey(KeyEvent.VK_UP)){
-                m_game.getPlayer().forward();
-            }else if(getKey(KeyEvent.VK_DOWN)){
-                m_game.getPlayer().reverse();
-            }else{
-                m_game.getPlayer().halt();
-            } 
         }
-        */
+        
+        if(getKey(KeyEvent.VK_UP)){
+            m_game.getPlayer().forward();
+        }else if(getKey(KeyEvent.VK_DOWN)){
+            m_game.getPlayer().reverse();
+        }else{
+            m_game.getPlayer().halt();
+        } 
+
         // Read from accelerometer
         // CONSIDER would need to adjust for starting position on phone..
+        // NOTE this stopped working o nmy laptop due to grahnix
+        /*
         float[] accel=readAccel();
         float x=accel[0];
         float y=accel[1]; 
+        System.out.println("accel "+x+","+y);
         Vec2 i=new Vec2(x,y);
+        if(x > 0.5){
+            m_game.getPlayer().left();
+        }else if(x < -0.5){
+            m_game.getPlayer().right();
+        }
+        if(y > 0.5){
+            m_game.getPlayer().forward();
+        }else if(y < -0.5){
+            m_game.getPlayer().reverse();
+        }
         Vec2 d=m_game.getPlayer().getDir();
         float a=Vec2.cross(i,d);
         //System.out.println("applying torque "+a);
@@ -152,7 +181,7 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             if(Vec2.dot(i,d) < 0){
                 //m_game.getPlayer().reverse();
             }else{
-                m_game.getPlayer().setThrottle(i.length());
+                //m_game.getPlayer().setThrottle(i.length());
             }
         }else{ 
             m_game.getPlayer().halt();
@@ -161,8 +190,9 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
 
         Body b=m_game.getPlayer().getBody();
         b.wakeUp();
-        b.applyTorque(a*-400);
-
+        //b.applyTorque(a*-400);
+        //b.applyTorque(a*10);
+        */
     }
 
     // Use this to help develop phone-like control system
@@ -210,11 +240,33 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
 
     public void render( ) {
         // render to back buffer
-        m_backGraphics.setColor( Color.black ) ;
+        m_backGraphics.setColor( Color.gray ) ;
         m_backGraphics.fillRect( 0,0, m_gameWidth,m_gameHeight) ;
         // render game field
         //m_game.draw(m_backGraphics);
         //m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+        AffineTransform t0=m_backGraphics.getTransform();
+
+        if(m_game.getPlayer().getBody()!=null){
+            Body pb=m_game.getPlayer().getBody();
+            m_playerPos=toScreen(pb.getPosition());
+            m_playerAngle=pb.getAngle();
+        }
+        
+        // Translate to user position
+        // and then offset to center of screen
+        
+        m_backGraphics.translate(m_gameWidth/2,m_gameHeight/2);
+
+        if(m_zoom!=1.0){
+            m_backGraphics.scale(m_zoom,m_zoom);
+        } 
+        m_backGraphics.rotate(-m_playerAngle);
+        m_backGraphics.translate(-m_playerPos.x,-m_playerPos.y);
+
+        m_backGraphics.setColor( Color.black ) ;
+        m_backGraphics.fillRect( 0,0, m_gameWidth,m_gameHeight) ;
+
 
         ArrayList<Renderable> renderables=m_game.getRenderables();
         AffineTransform t=m_backGraphics.getTransform();
@@ -248,7 +300,9 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             //  and call .renderAtTransform(), maybe setup graphics first or something..
             m_backGraphics.setTransform(new AffineTransform(t));
         }
-        
+      
+        //reset to original trnasform 
+        m_backGraphics.setTransform(new AffineTransform(t0)); 
         Graphics g = getGraphics();
         g.drawImage( m_backBuffer, 5,25, null );
         g.dispose();
@@ -262,6 +316,10 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             r[i]=toWorld(n[i]);
         }
         return r;
+    }
+
+    private Vec2 toWorld(Vec2 v){
+        return new Vec2(toWorld(v.x),toWorld(v.y));
     }
 
     private float[] toScreen(float[] n){
@@ -281,6 +339,10 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
 
     private float toScreen(float n){
         return n*PPM;
+    }
+
+    private Vec2 toScreen(Vec2 v){
+        return new Vec2(toScreen(v.x),toScreen(v.y));
     }
 
 }

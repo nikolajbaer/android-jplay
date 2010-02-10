@@ -50,7 +50,7 @@ public class PlayerObject extends PolygonGameObject {
         if(m_body==null){ return; }
         //m_body.setAngularVelocity(-1.0f);
         if(m_body.getAngularVelocity() > -MAX_ANG_VEL){
-            m_body.applyTorque(-820.0f);
+            m_body.applyTorque(-420.0f);
         }
     }
    
@@ -60,7 +60,7 @@ public class PlayerObject extends PolygonGameObject {
         if(m_body==null){ return; }
         //m_body.setAngularVelocity(1.0f);
         if(m_body.getAngularVelocity() < MAX_ANG_VEL){
-            m_body.applyTorque(820.0f);
+            m_body.applyTorque(420.0f);
         }
     }
 
