@@ -13,7 +13,7 @@ public class TankCannon extends Weapon {
     private boolean m_shooting;
     private int m_reloadCount;
     private static float m_bulletVelocity = 10.0f;
-    private static final int RELOAD_CNTR=20;
+    private static final int RELOAD_CNTR=10;
 
     public TankCannon(){
         m_shooting=false;

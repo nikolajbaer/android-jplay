@@ -64,7 +64,7 @@ public class JPlayThread extends Thread {
         mContext = context;
         mRun=true;
         mClearPaint = new Paint();
-        mClearPaint.setARGB(255,  20, 20, 20);
+        mClearPaint.setARGB(255,  120, 120, 120);
         mGameAreaPaint = new Paint();
         mGameAreaPaint.setARGB(255,  0,0 ,0);
         
@@ -295,17 +295,15 @@ public class JPlayThread extends Thread {
             b.wakeUp();
             b.applyTorque(a*-400);
             */
-            float thresh=0.5f;
-            if(x > thresh){
-                m_game.getPlayer().right();
-            }else if(x < -thresh){
-                m_game.getPlayer().left();
+            //float thresh=0.5f;
+            if(x > 0.0f){
+                m_game.getPlayer().right(x);
             }
-            if(y > thresh ){
-                m_game.getPlayer().forward();
-            }else if(y < -thresh){
-                m_game.getPlayer().reverse();
+            if(x < 0.0f){
+                m_game.getPlayer().left(Math.abs(x));
             }
+
+            m_game.getPlayer().setThrottle(-y);
     
         } 
     }

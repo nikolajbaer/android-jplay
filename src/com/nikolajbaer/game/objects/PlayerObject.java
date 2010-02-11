@@ -44,23 +44,32 @@ public class PlayerObject extends PolygonGameObject {
 
     // TODO add alert system to warn player with issues in their tank
     // e.g. shields down, hull level critical, cannon reloading stalled
-
     public void left(){
+        left(1.0f);
+    }
+    public void left(float x){
         //halt();
+        if(x<0){ return; }
+        if(x>1.0f){ x=1.0f; }
         if(m_body==null){ return; }
         //m_body.setAngularVelocity(-1.0f);
         if(m_body.getAngularVelocity() > -MAX_ANG_VEL){
-            m_body.applyTorque(-220.0f);
+            m_body.applyTorque(-220.0f*x);
         }
     }
    
     // TODO make this more natural 
     public void right(){
+        right(1.0f);
+    }
+    public void right(float x){
+        if(x<0){ return; }
+        if(x>1.0f){ x=1.0f; }
         //halt();
         if(m_body==null){ return; }
         //m_body.setAngularVelocity(1.0f);
         if(m_body.getAngularVelocity() < MAX_ANG_VEL){
-            m_body.applyTorque(220.0f);
+            m_body.applyTorque(220.0f*x);
         }
     }
 
@@ -87,7 +96,7 @@ public class PlayerObject extends PolygonGameObject {
 
     public void setThrottle(float mag){
         if(mag >1.0){ mag=1.0f; }
-        else if(mag < 1.0f){ mag=1.0f; }
+        else if(mag < -1.0f ){ mag=-1.0f; }
         thruster=mag*30.0f;
     }
 

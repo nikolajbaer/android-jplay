@@ -30,9 +30,10 @@ public class Game implements GameObjectEventListener,ContactListener {
     private ArrayList<Renderable> m_renderables;
     private ArrayList<GameObject> m_toRemove;
     private ArrayList<GamePlayer> m_gamePlayers;
-    private ArrayList<GameObject> m_gameObstacles;
+    private ArrayList<ObstacleObject> m_gameObstacles;
     private PlayerObject m_player;
     private boolean[][] m_obstacleGrid;
+    private final static int OBSTACLE_GRID_SIZE=1;
 
     // CONSIDER currently the simplest way to manage physics world interrelationships (see PlayerObect GO create)
     public static Game game=null; // singleton
@@ -60,9 +61,12 @@ public class Game implements GameObjectEventListener,ContactListener {
         m_gameObjects=new ArrayList<GameObject>();
         m_toRemove=new ArrayList<GameObject>();
         m_gamePlayers=new ArrayList<GamePlayer>();
-        m_gameObstacles=new ArrayList<GameObject>();
+        m_gameObstacles=new ArrayList<ObstacleObject>();
         m_renderables=new ArrayList<Renderable>();
 
+        // grid of obstacles (dfeault to false)
+        // for future A* path finding
+        m_obstacleGrid=new boolean[(int)(m_width/OBSTACLE_GRID_SIZE)][(int)(m_height/OBSTACLE_GRID_SIZE)];
     }
     
     public void addPlayer(GamePlayer gp){
@@ -78,8 +82,12 @@ public class Game implements GameObjectEventListener,ContactListener {
         }
     }
 
-    public void addObstacle(){
-        // TODO add obstacle grid manufacturing thingy
+    public void addObstacle(int i,int j){
+        Body b=createStaticRect(i*OBSTACLE_GRID_SIZE,j*OBSTACLE_GRID_SIZE,OBSTACLE_GRID_SIZE,OBSTACLE_GRID_SIZE);
+        ObstacleObject o=new ObstacleObject(b);
+        m_gameObstacles.add(o);
+        m_obstacleGrid[i][j]=true;
+        addGameObject(o);
     }
 
     public Body createCircle(float density, float radius){
@@ -212,6 +220,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         m_world.destroyBody(b);
         m_gameObjects.remove(go);
         m_renderables.remove(go);
+        //remove from other lists?
     }
 
     public ArrayList<GamePlayer> getPlayers(){
