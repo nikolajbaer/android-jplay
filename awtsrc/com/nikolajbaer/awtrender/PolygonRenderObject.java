@@ -7,9 +7,9 @@ import java.awt.*;
 import java.awt.geom.*;
 
 public class PolygonRenderObject extends AWTRenderObject { 
-    private int[] x_pts;
-    private int[] y_pts;
-    private Color m_color;
+    protected int[] x_pts;
+    protected int[] y_pts;
+    protected Color m_color;
 
     // TODO make this create from a key
     public PolygonRenderObject(){

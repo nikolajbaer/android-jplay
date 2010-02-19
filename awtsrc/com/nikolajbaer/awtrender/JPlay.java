@@ -28,6 +28,7 @@ import com.nikolajbaer.game.objects.*;
 import com.nikolajbaer.Util;
 import com.nikolajbaer.game.*;
 import com.nikolajbaer.game.players.*;
+import com.nikolajbaer.game.weapons.*;
 
 public class JPlay extends JFrame implements ActionListener { //implements Runnable{
     private Game m_game;
@@ -39,8 +40,10 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
 
     // pixels per meter
     public static final float PPM = 10.0f;
-    private int m_gameWidth=400;
-    private int m_gameHeight=600;
+    private int m_gameWidth=600;
+    private int m_gameHeight=800;
+    private int m_screenWidth=400;
+    private int m_screenHeight=600;
     private double m_zoom=1.0;
     private double m_zoom2=0.5;
     private float m_playerAngle;
@@ -51,13 +54,13 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
 
         m_renderObjects=new HashMap<String,AWTRenderObject>();
 
-        setSize(m_gameWidth+10,m_gameHeight+20);
+        setSize(m_screenWidth,m_screenHeight);//m_gameWidth+10,m_gameHeight+20);
         m_backBuffer = new BufferedImage( m_gameWidth,m_gameHeight, BufferedImage.TYPE_INT_RGB ) ;
         m_backGraphics = (Graphics2D)m_backBuffer.getGraphics();
         //m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int gwidth=(int)(m_gameWidth/PPM);
         int gheight=(int)(m_gameHeight/PPM);
-        m_game=new Game(gwidth*4,gheight*4); // game is in meters
+        m_game=new Game(gwidth,gheight); // game is in meters
         Game.game=m_game;
         m_timer = new Timer(1000/40,this);
         m_timer.setInitialDelay(500);
@@ -102,13 +105,18 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
             float ra=(float)(i*a < Math.PI ? i*a+Math.PI : i*a-Math.PI);
             b.setXForm( mid.add(rv) ,(float)(ra+Math.PI/2)); // i guess it goes from 0,1 not 1,0
             PlayerObject po=new PlayerObject(b,verts);
-
+            // arm the tank
+            po.addWeapon(0,new TankCannon());
+            po.addWeapon(1,new Blaster());
+            po.selectWeapon(0);
+            // and add ai or player
             if(i==0){ 
                 m_game.addPlayer(new LivePlayer(po),true);
             }else{
-                m_game.addPlayer(new HunterPlayer(po,10));
+                m_game.addPlayer(new LambPlayer(po));
             }
         }
+        m_game.addObstacle(3,3);
     }
 
     private Boolean getKey(int k){
@@ -154,6 +162,17 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         }else{
             m_game.getPlayer().halt();
         } 
+
+
+        if(getKey(KeyEvent.VK_1)){
+            m_game.getPlayer().selectWeapon(0);
+        }else if(getKey(KeyEvent.VK_2)){
+            m_game.getPlayer().selectWeapon(1);
+        }else if(getKey(KeyEvent.VK_3)){
+            m_game.getPlayer().selectWeapon(2);
+        }
+
+
 
         // Read from accelerometer
         // CONSIDER would need to adjust for starting position on phone..
@@ -240,8 +259,8 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
 
     public void render( ) {
         // render to back buffer
-        m_backGraphics.setColor( Color.gray ) ;
-        m_backGraphics.fillRect( 0,0, m_gameWidth,m_gameHeight) ;
+        m_backGraphics.setColor( Color.black ) ;
+        m_backGraphics.fillRect( 0,0, m_screenWidth,m_screenHeight) ;
         // render game field
         //m_game.draw(m_backGraphics);
         //m_backGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
@@ -256,16 +275,18 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
         // Translate to user position
         // and then offset to center of screen
         
-        m_backGraphics.translate(m_gameWidth/2,m_gameHeight/2);
+        m_backGraphics.translate(m_screenWidth/2,m_screenHeight/2);
 
-        if(m_zoom!=1.0){
+        /*if(m_zoom!=1.0){
             m_backGraphics.scale(m_zoom,m_zoom);
-        } 
+        } */
+        m_backGraphics.scale(0.5,0.5);
+
         m_backGraphics.rotate(-m_playerAngle);
         m_backGraphics.translate(-m_playerPos.x,-m_playerPos.y);
 
-        m_backGraphics.setColor( Color.black ) ;
-        m_backGraphics.fillRect( 0,0, m_gameWidth,m_gameHeight) ;
+        m_backGraphics.setColor( Color.gray ) ;
+        m_backGraphics.drawRect( 0,0, m_gameWidth,m_gameHeight) ;
 
 
         ArrayList<Renderable> renderables=m_game.getRenderables();
@@ -286,7 +307,12 @@ public class JPlay extends JFrame implements ActionListener { //implements Runna
                     // that i can override for each render lib
                     System.out.println("Building a "+k+" Render Object");
                     //ro=new PolygonRenderObject();
-                    ro=new PNGRenderObject("res/drawable/"+k+".png");
+                    if(k=="obstacle"){
+                        int gs=(int)toScreen(m_game.OBSTACLE_GRID_SIZE);
+                        ro=new RectRenderObject(gs,gs);
+                    }else{
+                        ro=new PNGRenderObject("res/drawable/"+k+".png");
+                    }
                     m_renderObjects.put(k,ro);
                 }
                 r.setRenderObject(ro);

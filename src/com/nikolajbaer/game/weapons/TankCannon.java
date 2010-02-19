@@ -12,8 +12,8 @@ import com.nikolajbaer.game.objects.*;
 public class TankCannon extends Weapon {
     private boolean m_shooting;
     private int m_reloadCount;
-    private static float m_bulletVelocity = 10.0f;
-    private static final int RELOAD_CNTR=10;
+    private static float m_bulletVelocity = 15.0f;
+    private static final int RELOAD_CNTR=20;
 
     public TankCannon(){
         m_shooting=false;

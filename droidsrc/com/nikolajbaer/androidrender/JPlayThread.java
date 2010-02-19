@@ -98,7 +98,7 @@ public class JPlayThread extends Thread {
                 m_livePlayer=new LivePlayer(po);
                 m_game.addPlayer(m_livePlayer,true);
             }else{
-                m_game.addPlayer(new LambPlayer(po));
+                m_game.addPlayer(new HunterPlayer(po,2));
             }
         }
     }

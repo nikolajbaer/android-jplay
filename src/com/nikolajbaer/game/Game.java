@@ -33,7 +33,8 @@ public class Game implements GameObjectEventListener,ContactListener {
     private ArrayList<ObstacleObject> m_gameObstacles;
     private PlayerObject m_player;
     private boolean[][] m_obstacleGrid;
-    private final static int OBSTACLE_GRID_SIZE=1;
+    // CONSIDER perhaps i should be able to set this
+    public final static int OBSTACLE_GRID_SIZE=4;
 
     // CONSIDER currently the simplest way to manage physics world interrelationships (see PlayerObect GO create)
     public static Game game=null; // singleton
@@ -201,7 +202,7 @@ public class Game implements GameObjectEventListener,ContactListener {
         bodies can not be removed in a contact callback, so we must queue them 
         queue is processed before tick
     */
-    private void queueRemoveGameObject(GameObject go){
+    public void queueRemoveGameObject(GameObject go){
         m_toRemove.add(go);
         //System.out.println("queueing remove of "+go);
     }

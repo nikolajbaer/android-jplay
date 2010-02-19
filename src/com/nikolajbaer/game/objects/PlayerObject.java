@@ -26,7 +26,8 @@ public class PlayerObject extends PolygonGameObject {
     protected static float MAX_ANG_VEL=1.0f;
     protected static Vec2 m_angleTarget; // if not null, rotate to this angle
 
-    protected Weapon m_currentWeapon; // TODO make it have weapon ports
+    protected Weapon[] m_weapons; // TODO make it have weapon ports
+    protected Weapon m_currentWeapon;
     protected Vec2 m_target; // this is where the gun should point at
     protected static boolean m_isDead=false;
     
@@ -35,11 +36,24 @@ public class PlayerObject extends PolygonGameObject {
         m_hull=HULL_MAX;
         m_shields=SHIELD_MAX;
         m_energy=ENERGY_MAX;
-        m_currentWeapon=new TankCannon();
+        m_currentWeapon=null; //new TankCannon();
         m_angleTarget=null;
         b.allowSleeping(false);
         //b.angularDamping=0.9f;
         //m_currentWeapon=new Blaster();
+        m_weapons=new Weapon[3];
+    }
+
+    public void addWeapon(int port,Weapon w){
+        if(port >= 0 && port < m_weapons.length){
+            m_weapons[port]=w;
+        }
+    }
+
+    public void selectWeapon(int port){
+        if(port >= 0 && port < m_weapons.length && m_weapons[port] != null){
+            m_currentWeapon=m_weapons[port];
+        }
     }
 
     // TODO add alert system to warn player with issues in their tank
@@ -122,7 +136,11 @@ public class PlayerObject extends PolygonGameObject {
         m_shields += SHIELD_RECHARGE_RATE;
         if(m_shields > SHIELD_MAX){ m_shields = SHIELD_MAX; } 
 
-        m_currentWeapon.tick(this);
+        for(int i=0;i<m_weapons.length;i++){
+            if(m_weapons[i] != null){
+                m_weapons[i].tick(this);
+            }
+        }
       
         if(m_angleTarget!=null){ 
             float ta=getAngleToTarget(m_angleTarget); 
@@ -156,12 +174,19 @@ public class PlayerObject extends PolygonGameObject {
 
     public void triggerOn(){
         //System.out.println(this+" firing");
-        m_currentWeapon.triggerOn();
+        if(m_currentWeapon != null){
+            m_currentWeapon.triggerOn();
+        }
     }
 
     public void triggerOff(){
        //System.out.println(this+" ceasing fire");
-       m_currentWeapon.triggerOff();
+        // release trigger on all weapons..
+        for(int i=0;i<m_weapons.length;i++){
+            if(m_weapons[i]!=null){
+                m_weapons[i].triggerOff();
+            }
+        }
     } 
 
     // CONSIDER make beam weapons apply more damage to shields, and physical apply less,
@@ -186,7 +211,7 @@ public class PlayerObject extends PolygonGameObject {
             Body b=Game.game.createCircle(0.5f,0.2f);
             ShrapnelObject so=new ShrapnelObject(b,4);
             b.setXForm(m_body.getWorldCenter().add(Util.rotate(new Vec2(2,0),i*astep)),0);
-            b.setLinearVelocity(Util.rotate(new Vec2(10,0),i*astep));
+            b.setLinearVelocity(Util.rotate(new Vec2(20,0),i*astep));
             emitGameObject(so);
         }  
         m_isDead=true; 
@@ -236,7 +261,10 @@ public class PlayerObject extends PolygonGameObject {
     }
 
     public float getWeaponVelocity(){
-        return m_currentWeapon.getVelocity(); 
+        if( m_currentWeapon != null){
+            return m_currentWeapon.getVelocity(); 
+        }
+        return 1.0f;
     }
 
     public String getRenderKey(){ return "tank2"; }

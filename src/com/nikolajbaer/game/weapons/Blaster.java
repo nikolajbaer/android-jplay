@@ -12,7 +12,11 @@ import com.nikolajbaer.Util;
 
 public class Blaster extends Weapon {
     private boolean m_shooting;
-    private static float m_bulletVelocity = 12.0f;
+    private static float m_bulletVelocity = 20.0f;
+    private static final int PRIME_COUNT=10;
+    private static final int RELOAD_COUNT=10;
+    private int m_flightTime;
+    private int m_reloadTime;
     private GameObject m_blast;
 
     public Blaster(){
@@ -25,12 +29,15 @@ public class Blaster extends Weapon {
     }
 
     public void triggerOff(){
-        m_shooting=false;
+       m_shooting=false;
     }
 
     public void tick(PlayerObject shooter){
         //System.out.println("ticking");
-        if(m_shooting && m_blast == null ){
+        m_flightTime++;
+        m_reloadTime++;
+        if(m_shooting && m_blast == null && m_reloadTime > RELOAD_COUNT){
+            System.out.println("shoot");
             shooter.drawEnergy(60);
             // TODO make it so the shooter can't get hit by their own bullets?
             Vec2 d=shooter.getDir();
@@ -42,24 +49,36 @@ public class Blaster extends Weapon {
             // TODO drain energy usage from game object if this is a beam weapon
             shooter.emitGameObject(bo); 
             m_blast=bo;
-        }else if(!m_shooting && m_blast != null){ 
+            m_flightTime=0;
+        }else if(m_shooting && m_blast != null && m_flightTime > PRIME_COUNT){ 
             /* detonate m_blast */ 
-            int n=8;
-            float astep=(float)(2*Math.PI)/n;
-            for(int i=0;i<n;i++){
-                Body b=Game.game.createCircle(0.5f,0.2f);
-                // TODO body might be null which means this bulllet collieded with something
-                // need to figure out how to remove this reference when that happens
-                if(m_blast.getBody()!=null){
-                    BulletObject so=new BulletObject(b,5);
-                    System.out.println("body "+b+", m_blast "+m_blast+" with body "+m_blast.getBody());
-                    b.setXForm(m_blast.getBody().getWorldCenter().add(Util.rotate(new Vec2(2,0),i*astep)),0);
-                    b.setLinearVelocity(Util.rotate(new Vec2(10,0),i*astep));
-                    m_blast.emitGameObject(so);
-                }
-            }  
-            // TODO destroy m_blast
+            if(m_blast.getBody()!=null){
+                System.out.println("kaboom");
+                int n=8;
+                float astep=(float)(2*Math.PI)/n;
+                float a=m_blast.getBody().getAngle();
+                for(int i=0;i<n;i++){
+                    // TODO body might be null which means this bulllet collided with something
+                    // need to figure out how to remove this reference when that happens
+                        Body b=Game.game.createCircle(0.5f,0.2f);
+                        BulletObject so=new BulletObject(b,5);
+                        //System.out.println("body "+b+", m_blast "+m_blast+" with body "+m_blast.getBody());
+                        b.setXForm(m_blast.getBody().getWorldCenter().add(Util.rotate(new Vec2(5,0),i*astep+a)),i*astep+a);
+                        b.setLinearVelocity(Util.rotate(new Vec2(30,0),i*astep+a));
+                        //m_blast.emitGameObject(so);
+                        shooter.emitGameObject(so);
+                }  
+                Game.game.queueRemoveGameObject(m_blast);
+                
+            }else{
+                //System.out.println("wall dud");
+            }
             m_blast=null; 
+            m_reloadTime=0;
+        }else{
+            if(m_blast != null){
+                //System.out.println("waiting...");
+            }
         }
     }
 
