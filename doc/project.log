@@ -67,3 +67,6 @@ I am really looking forward to digging into the physics engine now. I added a su
 
 2/10/2010
 Fixed up the controls a bit to have throttled turning based upon the tilt. This makes it more controllable. The next challenge, however, is when I upped the number of AI players everything kinda really slowed down. This means big maelstroms might not be possible on this game. For now I am keeping it to one player, and i might not be able to do much with extreme particle effects and exploding debris at this point. This of course is on my somewhat slow myTouch, but this is a big concern. I want the game to be really easy and fun to play. For now, though, I switched gears and hope to get in some obstacles to give me a fighting chance, and hopefully to soon plug in a weapon switching system so i can start to build out a host of interesting simple weapons. Then, I guess add some basic interface components to setup each game, and voila, i have something closer to distribution quality.
+
+6/13/2010
+Wow, alot has happened since i last looked at this project. I got married, work accelerated (and is doing great .. cough www.webcubecms.com), and android games are still as compelling a project as possible. Yet the water is warmer and my new wife and I are house hunting. So whats a coder to aside from pop what he has onto github!
