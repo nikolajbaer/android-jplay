@@ -13,3 +13,6 @@ Use:
 
 Please see license for precise license details, but I encourage any and all to fork, make a beautiful game or gain inspiration (or see how not to do things) via my code.
 
+Bundled Libraries:
+
+I bundled JBox2D, the 2d physics engine (http://www.jbox2d.org/), into this git repo. Please see its license details for more information (i believe it is the zlib/libpng license, per the sourceforge page http://sourceforge.net/projects/jbox2d/).
